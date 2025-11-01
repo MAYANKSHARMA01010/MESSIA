@@ -14,4 +14,3 @@ authRouter.post("/register",createUserMiddleware,createUserController)
 module.exports = {
     authRouter
 }
- 
