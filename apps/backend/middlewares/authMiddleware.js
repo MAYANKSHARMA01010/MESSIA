@@ -72,9 +72,35 @@ async function createUserMiddleware(req, res, next) {
     }
 }
 
-async function loginUserMiddleware(req,res,next) {
+async function loginUserMiddleware(req, res, next) {
+    let { email, username, password } = req.body;
 
+    if ((!email && !username) || !password) {
+        return res.status(400).json({
+            ERROR: "Email or Username and Password are required",
+        });
+    }
+
+    if (email) email = email.trim().toLowerCase();
+    if (username) username = username.trim().toLowerCase();
+
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return res.status(400).json({
+            ERROR: "Invalid email format",
+        });
+    }
+
+    if (username && username.length < 3) {
+        return res.status(400).json({
+            ERROR: "Username must be at least 3 characters long",
+        });
+    }
+
+    req.body = { email, username, password };
+
+    next();
 }
+
 
 module.exports = { 
     createUserMiddleware,
