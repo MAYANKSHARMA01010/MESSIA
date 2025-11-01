@@ -14,7 +14,7 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-pink-50 to-white px-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-b from-pink-50 to-white px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-md">
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
           Create your <span className="text-pink-600">Messia</span> account
