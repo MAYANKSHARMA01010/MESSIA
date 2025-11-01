@@ -72,4 +72,11 @@ async function createUserMiddleware(req, res, next) {
     }
 }
 
-module.exports = { createUserMiddleware };
+async function loginUserMiddleware(req,res,next) {
+
+}
+
+module.exports = { 
+    createUserMiddleware,
+    loginUserMiddleware
+};

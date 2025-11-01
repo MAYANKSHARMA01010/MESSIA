@@ -34,4 +34,11 @@ async function createUserController(req, res) {
     }
 }
 
-module.exports = { createUserController };
+async function loginUserController(req,res) {
+
+}
+
+module.exports = { 
+    createUserController,
+    loginUserController
+};
