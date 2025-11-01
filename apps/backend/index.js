@@ -11,5 +11,6 @@ app.get("/",(req,res) => {
 })
 
 app.listen(PORT,() => {
-    console.log(`Server Start at http://localhost:${PORT}`)
+    console.log(`Local Backend Server Start at ${process.env.BACKEND_LOCAL_URL}`)
+    console.log(`Server Backend Server Start at ${process.env.BACKEND_SERVER_URL}`)
 })
