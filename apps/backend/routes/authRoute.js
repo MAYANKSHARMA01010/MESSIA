@@ -3,7 +3,7 @@ const express = require("express")
 const authRouter = express.Router()
 const {
     createUserController
-} = require("../controllers/authControllers")
+} = require("../controllers/authController")
 const {
     createUserMiddleware
 } = require("../middlewares/authMiddleware")

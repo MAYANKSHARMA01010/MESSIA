@@ -9,8 +9,44 @@ async function createUserMiddleware(req, res, next) {
         });
     }
 
-    email = email.toLowerCase();
-    username = username.toLowerCase();
+    name = name.trim();
+    email = email.trim().toLowerCase();
+    username = username.trim().toLowerCase();
+
+    if (password !== confirm_password) {
+        return res.status(400).json({
+            ERROR: "Password and Confirm Password do not match",
+        });
+    }
+
+    if (password.length < 8) {
+        return res.status(400).json({
+            ERROR: "Password must be at least 8 characters long",
+        });
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return res.status(400).json({
+            ERROR: "Invalid email format",
+        });
+    }
+
+    if (username.length < 3) {
+        return res.status(400).json({
+            ERROR: "Username must be at least 3 characters long",
+        });
+    }
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+        return res.status(400).json({
+            ERROR: "Username can only contain letters, numbers, and underscores",
+        });
+    }
+
+    if (!/^[a-zA-Z\s]+$/.test(name)) {
+        return res.status(400).json({
+            ERROR: "Name should contain only letters and spaces",
+        });
+    }
 
     try {
         const existingUser = await prisma.user.findFirst({
@@ -25,8 +61,7 @@ async function createUserMiddleware(req, res, next) {
             });
         }
 
-        req.body.email = email;
-        req.body.username = username;
+        req.body = { name, username, email, password, confirm_password };
         next();
     } 
     catch (err) {
@@ -37,6 +72,4 @@ async function createUserMiddleware(req, res, next) {
     }
 }
 
-module.exports = { 
-    createUserMiddleware 
-};
+module.exports = { createUserMiddleware };
