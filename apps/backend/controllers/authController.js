@@ -1,4 +1,5 @@
 const { prisma } = require("../config/database");
+const { createToken } = require("../utils/auth")
 const bcrypt = require("bcrypt");
 
 async function createUserController(req, res) {
