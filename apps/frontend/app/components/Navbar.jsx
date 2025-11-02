@@ -11,11 +11,15 @@ function Navbar() {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      requestAnimationFrame(() => {
+        setIsLoggedIn(!!token);
+      });
+    }
   }, []);
 
-  const toggleMenu = () => setIsOpen(!isOpen);
+  const toggleMenu = () => setIsOpen((prev) => !prev);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
