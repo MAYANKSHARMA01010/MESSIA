@@ -48,8 +48,13 @@ function authenticate(req, res, next) {
 }
 
 
+async function authenticate(req,res,next) {
+
+}
+
 module.exports = {
     createToken,
     verifyToken,
+    authenticate,
     authenticate,
 };

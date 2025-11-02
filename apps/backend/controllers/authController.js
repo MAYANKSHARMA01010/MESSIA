@@ -101,8 +101,13 @@ async function logoutUserController(req,res) {
 }
 
 
+async function getMeController(req,res) {
+
+}
+
 module.exports = { 
     createUserController,
     loginUserController,
     logoutUserController,
+    getMeController,
 };
