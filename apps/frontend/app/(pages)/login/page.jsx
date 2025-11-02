@@ -3,14 +3,57 @@ import React, { useState } from "react";
 import Link from "next/link";
 
 function Login() {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({
+    email: "",
+    username: "",
+    password: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const BASE_URL =
+    process.env.NODE_ENV === "production"
+      ? process.env.NEXT_PUBLIC_BACKEND_SERVER_URL
+      : process.env.NEXT_PUBLIC_BACKEND_LOCAL_URL;
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login Data:", formData);
+    setLoading(true);
+    setMessage("");
+
+    const payload = {
+      email: formData.email.trim() || undefined,
+      username: formData.username.trim() || undefined,
+      password: formData.password,
+    };
+
+    try {
+      const res = await fetch(`${BASE_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      setLoading(false);
+
+      if (!res.ok) {
+        setMessage(data.ERROR || "Login failed ❌");
+        return;
+      }
+
+      localStorage.setItem("token", data.token);
+      setMessage("✅ Login successful!");
+    } 
+    catch (err) {
+      console.error("Login error:", err);
+      setLoading(false);
+      setMessage("Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -22,14 +65,16 @@ function Login() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-gray-700 mb-1">Email</label>
+            <label className="block text-gray-700 mb-1">
+              Email or Username
+            </label>
             <input
-              type="email"
+              type="text"
               name="email"
               required
-              value={formData.email}
+              value={formData.email || formData.username}
               onChange={handleChange}
-              placeholder="you@example.com"
+              placeholder="you@example.com or john_doe"
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-pink-500 outline-none"
             />
           </div>
@@ -49,11 +94,16 @@ function Login() {
 
           <button
             type="submit"
-            className="w-full bg-pink-600 text-white py-2 rounded-lg hover:bg-pink-700 transition"
+            disabled={loading}
+            className="w-full bg-pink-600 text-white py-2 rounded-lg hover:bg-pink-700 transition disabled:opacity-60"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
+
+        {message && (
+          <p className="text-center mt-4 text-sm text-gray-700">{message}</p>
+        )}
 
         <p className="text-center text-gray-600 text-sm mt-5">
           Don’t have an account?{" "}
