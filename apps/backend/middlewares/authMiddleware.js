@@ -52,7 +52,7 @@ async function createUserMiddleware(req, res, next) {
     try {
         const existingUser = await prisma.user.findFirst({
             where: {
-                OR: [{ email }, { username }],
+                OR: [{ Email: email }, { Username: username }]
             },
         });
 

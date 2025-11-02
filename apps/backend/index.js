@@ -4,7 +4,7 @@ const { authRouter } = require("./routes/authRoute.js");
 require("dotenv").config();
 
 const app = express();
-const PORT = process.env.SERVER_PORT || 5001;
+const PORT = process.env.SERVER_PORT;
 
 app.use(corsMiddleware);
 app.use(express.json());
