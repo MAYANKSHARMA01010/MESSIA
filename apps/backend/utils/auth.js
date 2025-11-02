@@ -23,7 +23,7 @@ function verifyToken(token) {
 }
 
 
-function authenticate(req, res, next) {
+async function authenticate(req, res, next) {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -39,22 +39,16 @@ function authenticate(req, res, next) {
     } 
     catch (err) {
         return res.status(401).json({
-        ERROR:
-            err.name === "TokenExpiredError"
-            ? "Token expired"
-            : "Invalid or expired token",
+            ERROR:
+                err.name === "TokenExpiredError"
+                ? "Token expired"
+                : "Invalid or expired token",
         });
     }
-}
-
-
-async function authenticate(req,res,next) {
-
 }
 
 module.exports = {
     createToken,
     verifyToken,
-    authenticate,
     authenticate,
 };
