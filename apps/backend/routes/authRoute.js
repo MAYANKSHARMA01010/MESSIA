@@ -4,19 +4,19 @@ const authRouter = express.Router()
 
 const {
     createUserMiddleware,
-    loginUserMiddleware
+    loginUserMiddleware,
+    logoutUserMiddleware
 } = require("../middlewares/authMiddleware")
 
 const {
     createUserController,
-    loginUserController
+    loginUserController,
+    logoutUserController
 } = require("../controllers/authController")
 
 
 authRouter.post("/register",createUserMiddleware,createUserController)
 authRouter.post("/login",loginUserMiddleware,loginUserController)
+authRouter.post('/logout',logoutUserMiddleware,logoutUserController)
 
-
-module.exports = {
-    authRouter
-}
+module.exports = { authRouter }

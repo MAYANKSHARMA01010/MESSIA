@@ -1,8 +1,9 @@
-require("dotenv").config();
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const SECRET = process.env.JWT_SECRET;
 if (!SECRET) throw new Error("❌ JWT_SECRET not set in environment");
+
 
 function createToken(payload) {
     return jwt.sign(payload, SECRET, {
@@ -10,6 +11,7 @@ function createToken(payload) {
         expiresIn: process.env.JWT_EXPIRES_IN,
     });
 }
+
 
 function verifyToken(token) {
     try {
@@ -19,6 +21,7 @@ function verifyToken(token) {
         throw err;
     }
 }
+
 
 function authenticate(req, res, next) {
     const authHeader = req.headers.authorization;
@@ -43,6 +46,7 @@ function authenticate(req, res, next) {
         });
     }
 }
+
 
 module.exports = {
     createToken,

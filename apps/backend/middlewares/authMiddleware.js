@@ -1,5 +1,6 @@
 const { prisma } = require("../config/database");
 
+
 async function createUserMiddleware(req, res, next) {
     let { name, username, email, password, confirm_password } = req.body;
 
@@ -65,12 +66,13 @@ async function createUserMiddleware(req, res, next) {
         next();
     } 
     catch (err) {
-        console.error(err);
+        console.error("Error in createUserMiddleware:", err);
         return res.status(500).json({
-            message: "Database not able to respond",
+            ERROR: "Something went wrong while checking user details. Please try again later.",
         });
     }
 }
+
 
 async function loginUserMiddleware(req, res, next) {
     let { email, username, password } = req.body;
@@ -102,7 +104,18 @@ async function loginUserMiddleware(req, res, next) {
 }
 
 
+async function logoutUserMiddleware(req,res,next) {
+    try {
+        
+    }
+    catch(err) {
+
+    }
+}
+
+
 module.exports = { 
     createUserMiddleware,
-    loginUserMiddleware
+    loginUserMiddleware,
+    logoutUserMiddleware,
 };

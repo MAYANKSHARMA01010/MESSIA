@@ -2,6 +2,7 @@ const { prisma } = require("../config/database");
 const { createToken } = require("../utils/auth")
 const bcrypt = require("bcrypt");
 
+
 async function createUserController(req, res) {
     const { name, username, email, password } = req.body;
 
@@ -34,6 +35,7 @@ async function createUserController(req, res) {
         });
     }
 }
+
 
 async function loginUserController(req, res) {
     const { email, username, password } = req.body;
@@ -83,7 +85,19 @@ async function loginUserController(req, res) {
     }
 }
 
+
+async function logoutUserController(req,res) {
+    try {
+
+    }
+    catch(err) {
+
+    }
+}
+
+
 module.exports = { 
     createUserController,
-    loginUserController
+    loginUserController,
+    logoutUserController,
 };
