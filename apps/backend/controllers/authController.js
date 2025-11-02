@@ -1,5 +1,5 @@
 const { prisma } = require("../config/database");
-const { createToken } = require("../utils/auth")
+const { createToken } = require("../utils/auth");
 const bcrypt = require("bcrypt");
 
 
@@ -11,10 +11,10 @@ async function createUserController(req, res) {
 
         const newUser = await prisma.user.create({
             data: {
-                Name: name,
-                Username: username,
-                Email: email,
-                Password: hashedPassword,
+                name,
+                username,
+                email,
+                password: hashedPassword,
             },
         });
 
@@ -22,14 +22,14 @@ async function createUserController(req, res) {
             message: "User registered successfully",
             user: {
                 id: newUser.id,
-                name: newUser.Name,
-                username: newUser.Username,
-                email: newUser.Email,
+                name: newUser.name,
+                username: newUser.username,
+                email: newUser.email,
             },
         });
     } 
     catch (err) {
-        console.error(err);
+        console.error("CreateUser error:", err);
         return res.status(500).json({
             ERROR: "Internal Server Error while creating user",
         });
@@ -44,8 +44,8 @@ async function loginUserController(req, res) {
         const user = await prisma.user.findFirst({
             where: {
                 OR: [
-                    email ? { Email: email } : undefined,
-                    username ? { Username: username } : undefined,
+                    email ? { email } : undefined,
+                    username ? { username } : undefined,
                 ].filter(Boolean),
             },
         });
@@ -54,16 +54,16 @@ async function loginUserController(req, res) {
             return res.status(404).json({ ERROR: "User not found" });
         }
 
-        const isMatch = await bcrypt.compare(password, user.Password);
+        const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ ERROR: "Invalid credentials" });
         }
 
         const payload = {
             id: user.id,
-            name: user.Name,
-            email: user.Email,
-            username: user.Username,
+            name: user.name,
+            email: user.email,
+            username: user.username,
         };
 
         const token = createToken(payload);
@@ -73,9 +73,9 @@ async function loginUserController(req, res) {
             token,
             user: {
                 id: user.id,
-                name: user.Name,
-                email: user.Email,
-                username: user.Username,
+                name: user.name,
+                email: user.email,
+                username: user.username,
             },
         });
     } 
@@ -86,7 +86,7 @@ async function loginUserController(req, res) {
 }
 
 
-async function logoutUserController(req,res) {
+async function logoutUserController(req, res) {
     try {
         return res.status(200).json({
             message: "Logout successful",
@@ -101,7 +101,7 @@ async function logoutUserController(req,res) {
 }
 
 
-async function getMeController(req,res) {
+async function getMeController(req, res) {
     try {
         const userId = req.user.id;
 
@@ -109,10 +109,10 @@ async function getMeController(req,res) {
             where: { id: userId },
             select: {
                 id: true,
-                Name: true,
-                Username: true,
-                Email: true,
-                Gender: true,
+                name: true,
+                username: true,
+                email: true,
+                gender: true,
             },
         });
 
