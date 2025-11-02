@@ -105,12 +105,15 @@ async function loginUserMiddleware(req, res, next) {
 
 
 async function logoutUserMiddleware(req,res,next) {
-    try {
-        
-    }
-    catch(err) {
+    const authHeader = req.headers.authorization;
 
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(400).json({
+            ERROR: "No token provided",
+        });
     }
+
+    next();
 }
 
 

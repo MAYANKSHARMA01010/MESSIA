@@ -88,10 +88,15 @@ async function loginUserController(req, res) {
 
 async function logoutUserController(req,res) {
     try {
-
-    }
-    catch(err) {
-
+        return res.status(200).json({
+            message: "Logout successful",
+        });
+    } 
+    catch (error) {
+        console.error("Logout error:", error);
+        return res.status(500).json({
+            ERROR: "Logout failed",
+        });
     }
 }
 
