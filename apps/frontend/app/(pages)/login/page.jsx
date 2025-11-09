@@ -7,8 +7,7 @@ import { ArrowLeft } from "lucide-react";
 
 function Login() {
   const [formData, setFormData] = useState({
-    email: "",
-    username: "",
+    input: "",
     password: "",
   });
 
@@ -30,10 +29,13 @@ function Login() {
     setLoading(true);
     setMessage("");
 
+    const input = formData.input.trim();
+
     const payload = {
-      email: formData.email.trim() || undefined,
-      username: formData.username.trim() || undefined,
       password: formData.password,
+      ...(input.includes("@")
+        ? { email: input.toLowerCase() }
+        : { username: input.toLowerCase() }),
     };
 
     try {
@@ -52,7 +54,8 @@ function Login() {
       }
 
       login(data.token);
-      setMessage("✅ Login successful!");
+      setMessage("✅ Login successful! Redirecting...");
+      setTimeout(() => router.push("/profile"), 1500);
     } catch (err) {
       console.error("Login error:", err);
       setLoading(false);
@@ -62,7 +65,6 @@ function Login() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-pink-100 via-white to-pink-50 px-4 relative">
-      {/* ✅ Back to Home Button */}
       <button
         onClick={() => router.push("/")}
         className="absolute top-6 left-6 flex items-center gap-2 text-gray-700 hover:text-pink-600 transition"
@@ -83,9 +85,9 @@ function Login() {
             </label>
             <input
               type="text"
-              name="email"
+              name="input"
               required
-              value={formData.email || formData.username}
+              value={formData.input}
               onChange={handleChange}
               placeholder="you@example.com or john_doe"
               className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 focus:ring-2 focus:ring-pink-500 outline-none transition-all"
@@ -117,7 +119,13 @@ function Login() {
         </form>
 
         {message && (
-          <p className="text-center mt-4 text-sm text-gray-700">{message}</p>
+          <p
+            className={`text-center mt-4 text-sm ${
+              message.includes("✅") ? "text-green-600" : "text-red-600"
+            }`}
+          >
+            {message}
+          </p>
         )}
 
         <p className="text-center text-gray-600 text-sm mt-6">

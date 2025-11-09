@@ -38,51 +38,55 @@ async function createUserController(req, res) {
 
 
 async function loginUserController(req, res) {
-    const { email, username, password } = req.body;
+  let { email, username, password } = req.body;
 
-    try {
-        const user = await prisma.user.findFirst({
-            where: {
-                OR: [
-                    email ? { email } : undefined,
-                    username ? { username } : undefined,
-                ].filter(Boolean),
-            },
-        });
-
-        if (!user) {
-            return res.status(404).json({ ERROR: "User not found" });
-        }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(401).json({ ERROR: "Invalid credentials" });
-        }
-
-        const payload = {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            username: user.username,
-        };
-
-        const token = createToken(payload);
-
-        return res.status(200).json({
-            message: "Login successful ✅",
-            token,
-            user: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                username: user.username,
-            },
-        });
-    } 
-    catch (err) {
-        console.error("Login Error:", err);
-        return res.status(500).json({ ERROR: "Internal Server Error" });
+  try {
+    if (!username && email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      username = email.trim().toLowerCase();
+      email = undefined;
     }
+
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          email ? { email: email.toLowerCase() } : undefined,
+          username ? { username: username.toLowerCase() } : undefined,
+        ].filter(Boolean),
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ ERROR: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ ERROR: "Invalid credentials" });
+    }
+
+    const payload = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      username: user.username,
+    };
+
+    const token = createToken(payload);
+
+    return res.status(200).json({
+      message: "Login successful ✅",
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        username: user.username,
+      },
+    });
+  } catch (err) {
+    console.error("Login Error:", err);
+    return res.status(500).json({ ERROR: "Internal Server Error" });
+  }
 }
 
 
