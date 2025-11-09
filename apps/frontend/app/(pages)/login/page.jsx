@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import { useAuth } from "../../context/AuthContext";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -11,6 +12,8 @@ function Login() {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+
+  const { login } = useAuth();
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -46,9 +49,10 @@ function Login() {
         return;
       }
 
-      localStorage.setItem("token", data.token);
+      login(data.token);
       setMessage("✅ Login successful!");
-    } catch (err) {
+    } 
+    catch (err) {
       console.error("Login error:", err);
       setLoading(false);
       setMessage("Something went wrong. Please try again.");
