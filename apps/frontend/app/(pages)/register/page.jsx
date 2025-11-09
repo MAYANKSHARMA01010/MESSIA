@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -13,6 +15,8 @@ function Register() {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+
+  const router = useRouter();
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,12 +31,16 @@ function Register() {
     setLoading(true);
     setMessage("");
 
+    if (formData.password !== formData.confirm_password) {
+      setMessage("❌ Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch(`${BASE_URL}/api/auth/register`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
@@ -44,7 +52,7 @@ function Register() {
         return;
       }
 
-      setMessage("✅ Registration successful! Please login.");
+      setMessage("✅ Registration successful! Redirecting to login...");
       setFormData({
         name: "",
         username: "",
@@ -52,6 +60,8 @@ function Register() {
         password: "",
         confirm_password: "",
       });
+
+      setTimeout(() => router.push("/login"), 2000);
     } catch (err) {
       console.error("Register error:", err);
       setLoading(false);
@@ -60,7 +70,15 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-white to-pink-50 px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-pink-100 via-white to-pink-50 px-4 relative">
+      <button
+        onClick={() => router.push("/")}
+        className="absolute top-6 left-6 flex items-center gap-2 text-gray-700 hover:text-pink-600 transition"
+      >
+        <ArrowLeft size={20} />
+        <span className="font-medium">Back to Home</span>
+      </button>
+
       <div className="w-full max-w-md bg-white/90 backdrop-blur-lg p-8 rounded-2xl shadow-lg border border-pink-100">
         <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
           Create your <span className="text-pink-600">Messia</span> account
@@ -152,12 +170,21 @@ function Register() {
         </form>
 
         {message && (
-          <p className="text-center mt-4 text-sm text-gray-700">{message}</p>
+          <p
+            className={`text-center mt-4 text-sm ${
+              message.includes("✅") ? "text-green-600" : "text-red-600"
+            }`}
+          >
+            {message}
+          </p>
         )}
 
         <p className="text-center text-gray-600 text-sm mt-6">
           Already have an account?{" "}
-          <Link href="/login" className="text-pink-600 font-medium hover:underline">
+          <Link
+            href="/login"
+            className="text-pink-600 font-medium hover:underline"
+          >
             Login
           </Link>
         </p>

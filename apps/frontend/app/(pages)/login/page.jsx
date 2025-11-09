@@ -1,7 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
+import { ArrowLeft } from "lucide-react";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -12,8 +14,8 @@ function Login() {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-
   const { login } = useAuth();
+  const router = useRouter();
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -51,8 +53,7 @@ function Login() {
 
       login(data.token);
       setMessage("✅ Login successful!");
-    } 
-    catch (err) {
+    } catch (err) {
       console.error("Login error:", err);
       setLoading(false);
       setMessage("Something went wrong. Please try again.");
@@ -60,7 +61,16 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-white to-pink-50 px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-pink-100 via-white to-pink-50 px-4 relative">
+      {/* ✅ Back to Home Button */}
+      <button
+        onClick={() => router.push("/")}
+        className="absolute top-6 left-6 flex items-center gap-2 text-gray-700 hover:text-pink-600 transition"
+      >
+        <ArrowLeft size={20} />
+        <span className="font-medium">Back to Home</span>
+      </button>
+
       <div className="w-full max-w-md bg-white/90 backdrop-blur-lg p-8 rounded-2xl shadow-lg border border-pink-100">
         <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
           Welcome Back to <span className="text-pink-600">Messia</span>
@@ -112,7 +122,10 @@ function Login() {
 
         <p className="text-center text-gray-600 text-sm mt-6">
           Don’t have an account?{" "}
-          <Link href="/register" className="text-pink-600 font-medium hover:underline">
+          <Link
+            href="/register"
+            className="text-pink-600 font-medium hover:underline"
+          >
             Register
           </Link>
         </p>
