@@ -4,15 +4,17 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
 import { ArrowLeft } from "lucide-react";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 function Login() {
   const [formData, setFormData] = useState({
     input: "",
     password: "",
   });
-
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+
   const { login } = useAuth();
   const router = useRouter();
 
@@ -23,6 +25,12 @@ function Login() {
     process.env.NODE_ENV === "production"
       ? process.env.NEXT_PUBLIC_BACKEND_SERVER_URL
       : process.env.NEXT_PUBLIC_BACKEND_LOCAL_URL;
+
+  const getErrorMessage = (err, fallback = "Login failed ❌") => {
+    if (err.response?.data?.ERROR) return err.response.data.ERROR;
+    if (err.request) return "No response from server. Check your network.";
+    return fallback;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,27 +47,29 @@ function Login() {
     };
 
     try {
-      const res = await fetch(`${BASE_URL}/api/auth/login`, {
-        method: "POST",
+      const res = await axios.post(`${BASE_URL}/api/auth/login`, payload, {
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        timeout: 8000,
       });
 
-      const data = await res.json();
       setLoading(false);
 
-      if (!res.ok) {
-        setMessage(data.ERROR || "Login failed ❌");
-        return;
+      if (res.data?.token) {
+        login(res.data.token);
+        toast.success("✅ Login successful! Redirecting...");
+        setMessage("✅ Login successful! Redirecting...");
+        setTimeout(() => router.push("/profile"), 1200);
+      } 
+      else {
+        toast.error("Unexpected response format ❌");
+        setMessage("Unexpected response format ❌");
       }
-
-      login(data.token);
-      setMessage("✅ Login successful! Redirecting...");
-      setTimeout(() => router.push("/profile"), 1500);
-    } catch (err) {
+    } 
+    catch (err) {
       console.error("Login error:", err);
       setLoading(false);
-      setMessage("Something went wrong. Please try again.");
+      toast.error(`❌ ${getErrorMessage(err)}`)
+      setMessage(`❌ ${getErrorMessage(err)}`);
     }
   };
 

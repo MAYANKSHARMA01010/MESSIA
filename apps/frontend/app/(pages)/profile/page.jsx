@@ -12,7 +12,7 @@ import {
   LogOut,
   ArrowLeft,
 } from "lucide-react";
-import toast from "react-hot-toast"; // ✅ Import toast
+import toast from "react-hot-toast";
 
 function ProfilePage() {
   const { token, isLoggedIn, logout } = useAuth();
@@ -25,7 +25,6 @@ function ProfilePage() {
       ? process.env.NEXT_PUBLIC_BACKEND_SERVER_URL
       : process.env.NEXT_PUBLIC_BACKEND_LOCAL_URL;
 
-  // Redirect if not logged in
   useEffect(() => {
     if (!isLoggedIn) {
       toast.error("You must be logged in to access your profile.");
@@ -33,7 +32,6 @@ function ProfilePage() {
     }
   }, [isLoggedIn]);
 
-  // Fetch user profile
   useEffect(() => {
     const fetchProfile = async () => {
       if (!token) return;
@@ -65,7 +63,6 @@ function ProfilePage() {
     fetchProfile();
   }, [token]);
 
-  // Logout handler
   const handleLogout = () => {
     logout();
     toast.success("You’ve been logged out successfully 👋");
