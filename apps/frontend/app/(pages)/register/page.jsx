@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -26,51 +28,66 @@ function Register() {
       ? process.env.NEXT_PUBLIC_BACKEND_SERVER_URL
       : process.env.NEXT_PUBLIC_BACKEND_LOCAL_URL;
 
+  const getErrorMessage = (err, fallback = "Registration failed ❌") => {
+    if (err.response?.data?.ERROR) return err.response.data.ERROR;
+    if (err.request) return "No response from server. Check your network.";
+    return fallback;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
 
     if (formData.password !== formData.confirm_password) {
-      setMessage("❌ Passwords do not match");
       setLoading(false);
+      toast.error("❌ Passwords do not match");
+      setMessage("❌ Passwords do not match");
       return;
     }
 
     try {
-      const res = await fetch(`${BASE_URL}/api/auth/register`, {
-        method: "POST",
+      const payload = {
+        name: formData.name.trim(),
+        username: formData.username.trim().toLowerCase(),
+        email: formData.email.trim().toLowerCase(),
+        password: formData.password,
+      };
+
+      const res = await axios.post(`${BASE_URL}/api/auth/register`, payload, {
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        timeout: 8000,
       });
 
-      const data = await res.json();
       setLoading(false);
 
-      if (!res.ok) {
-        setMessage(data.ERROR || "Registration failed ❌");
-        return;
+      if (res.status === 201 || res.data?.success) {
+        toast.success("✅ Registration successful! Redirecting...");
+        setMessage("✅ Registration successful! Redirecting...");
+        setFormData({
+          name: "",
+          username: "",
+          email: "",
+          password: "",
+          confirm_password: "",
+        });
+        setTimeout(() => router.push("/login"), 1200);
+      } 
+      else {
+        toast.error(res.data?.ERROR || "Registration failed ❌");
+        setMessage(res.data?.ERROR || "Registration failed ❌");
       }
-
-      setMessage("✅ Registration successful! Redirecting to login...");
-      setFormData({
-        name: "",
-        username: "",
-        email: "",
-        password: "",
-        confirm_password: "",
-      });
-
-      setTimeout(() => router.push("/login"), 2000);
     } catch (err) {
       console.error("Register error:", err);
       setLoading(false);
-      setMessage("Something went wrong. Please try again.");
+      toast.error(`❌ ${getErrorMessage(err)}`);
+      setMessage(`❌ ${getErrorMessage(err)}`);
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-pink-100 via-white to-pink-50 px-4 relative">
+      {/* Back Button */}
       <button
         onClick={() => router.push("/")}
         className="absolute top-6 left-6 flex items-center gap-2 text-gray-700 hover:text-pink-600 transition"
@@ -79,6 +96,7 @@ function Register() {
         <span className="font-medium">Back to Home</span>
       </button>
 
+      {/* Card */}
       <div className="w-full max-w-md bg-white/90 backdrop-blur-lg p-8 rounded-2xl shadow-lg border border-pink-100">
         <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
           Create your <span className="text-pink-600">Messia</span> account
