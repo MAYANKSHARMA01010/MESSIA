@@ -12,6 +12,7 @@ import {
   LogOut,
   ArrowLeft,
 } from "lucide-react";
+import axios from "axios";
 import toast from "react-hot-toast";
 
 function ProfilePage() {
@@ -37,25 +38,31 @@ function ProfilePage() {
       if (!token) return;
 
       try {
-        const res = await fetch(`${BASE_URL}/api/auth/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const res = await axios.get(`${BASE_URL}/api/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+          timeout: 8000,
         });
 
-        const data = await res.json();
-
-        if (res.ok) {
-          setUser(data.user);
-          toast.success(`Welcome back, ${data.user.name.split(" ")[0]}! 🎉`);
-        } else {
-          toast.error(data.ERROR || "Failed to load profile.");
-          console.error("Error fetching user:", data.ERROR);
+        if (res.data?.user) {
+          setUser(res.data.user);
+          toast.success(`Welcome back, ${res.data.user.name.split(" ")[0]}! 🎉`);
+        } 
+        else {
+          toast.error("Invalid response format ❌");
         }
-      } catch (err) {
-        toast.error("Error fetching profile. Please try again later.");
+      } 
+      catch (err) {
         console.error("Profile fetch error:", err);
-      } finally {
+        if (err.response?.status === 401) {
+          toast.error("Session expired. Please log in again.");
+          logout();
+          router.push("/login");
+        } 
+        else {
+          toast.error("Error fetching profile. Please try again later.");
+        }
+      } 
+      finally {
         setLoading(false);
       }
     };
@@ -97,6 +104,7 @@ function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-white to-pink-50 py-10 px-4 flex flex-col items-center">
+      {/* Header Bar */}
       <div className="w-full max-w-4xl flex items-center justify-between mb-8">
         <button
           onClick={() => router.push("/")}
@@ -123,9 +131,7 @@ function ProfilePage() {
         </div>
 
         <div className="pt-16 pb-10 px-8 text-center">
-          <h2 className="text-3xl font-semibold text-gray-800">
-            {user.name}
-          </h2>
+          <h2 className="text-3xl font-semibold text-gray-800">{user.name}</h2>
           <p className="text-gray-500 mt-1">@{user.username}</p>
 
           <p className="mt-4 text-sm text-gray-500 italic">
