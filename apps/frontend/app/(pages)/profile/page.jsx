@@ -12,6 +12,7 @@ import {
   LogOut,
   ArrowLeft,
 } from "lucide-react";
+import toast from "react-hot-toast"; // ✅ Import toast
 
 function ProfilePage() {
   const { token, isLoggedIn, logout } = useAuth();
@@ -24,29 +25,37 @@ function ProfilePage() {
       ? process.env.NEXT_PUBLIC_BACKEND_SERVER_URL
       : process.env.NEXT_PUBLIC_BACKEND_LOCAL_URL;
 
+  // Redirect if not logged in
   useEffect(() => {
     if (!isLoggedIn) {
+      toast.error("You must be logged in to access your profile.");
       router.push("/login");
     }
   }, [isLoggedIn]);
 
+  // Fetch user profile
   useEffect(() => {
     const fetchProfile = async () => {
       if (!token) return;
+
       try {
         const res = await fetch(`${BASE_URL}/api/auth/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
+
         const data = await res.json();
 
         if (res.ok) {
           setUser(data.user);
+          toast.success(`Welcome back, ${data.user.name.split(" ")[0]}! 🎉`);
         } else {
+          toast.error(data.ERROR || "Failed to load profile.");
           console.error("Error fetching user:", data.ERROR);
         }
       } catch (err) {
+        toast.error("Error fetching profile. Please try again later.");
         console.error("Profile fetch error:", err);
       } finally {
         setLoading(false);
@@ -56,8 +65,10 @@ function ProfilePage() {
     fetchProfile();
   }, [token]);
 
+  // Logout handler
   const handleLogout = () => {
     logout();
+    toast.success("You’ve been logged out successfully 👋");
     router.push("/");
   };
 
@@ -160,7 +171,7 @@ function ProfilePage() {
 
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
-              onClick={() => alert("Edit profile coming soon ✏️")}
+              onClick={() => toast("Edit profile coming soon ✏️")}
               className="bg-pink-600 text-white px-6 py-2.5 rounded-lg hover:bg-pink-700 transition"
             >
               Edit Profile
