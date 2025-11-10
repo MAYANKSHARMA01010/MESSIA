@@ -27,4 +27,11 @@ authRouter.post('/logout',logoutUserMiddleware,logoutUserController)
 authRouter.get("/me",authenticate,getMeController)
 authRouter.put("/update", authenticate, updateUserMiddleware, updateUserController);
 
+// Future addition ROUTES :-
+// /refresh
+// /change-password
+// /forgot-password
+// /reset-password/:token
+// /delete
+
 module.exports = { authRouter }
