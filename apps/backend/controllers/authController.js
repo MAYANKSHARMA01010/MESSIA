@@ -138,9 +138,68 @@ async function getMeController(req, res) {
 }
 
 
+async function updateUserController(req, res) {
+  try {
+    const userId = req.user.id;
+    const { name, username, gender } = req.body;
+
+    const updateData = {};
+
+    if (name && name.trim()) updateData.name = name.trim();
+    if (username && username.trim()) updateData.username = username.trim().toLowerCase();
+    if (gender && gender.trim()) updateData.gender = gender.trim();
+
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({
+        ERROR: "No valid fields provided for update",
+      });
+    }
+
+    if (updateData.username) {
+      const existingUser = await prisma.user.findFirst({
+        where: {
+          username: updateData.username,
+          NOT: { id: userId },
+        },
+      });
+      if (existingUser) {
+        return res.status(400).json({
+          ERROR: "Username already taken",
+        });
+      }
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: updateData,
+      select: {
+        id: true,
+        name: true,
+        username: true,
+        email: true,
+        gender: true,
+        updatedAt: true,
+      },
+    });
+
+    return res.status(200).json({
+      message: "✅ Profile updated successfully",
+      user: updatedUser,
+    });
+  } 
+  catch (err) {
+    console.error("UpdateUser error:", err);
+    return res.status(500).json({
+      ERROR: "Internal Server Error while updating user",
+    });
+  }
+}
+
+
 module.exports = { 
     createUserController,
     loginUserController,
     logoutUserController,
     getMeController,
+    updateUserController,
 };

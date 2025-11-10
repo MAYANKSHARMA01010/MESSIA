@@ -117,8 +117,40 @@ async function logoutUserMiddleware(req,res,next) {
 }
 
 
+async function updateUserMiddleware(req, res, next) {
+    const { name, username, gender, email, password } = req.body;
+
+    if (email || password) {
+        return res.status(400).json({
+            ERROR: "Email and password updates are not allowed through this route.",
+        });
+    }
+
+    if (!name && !username && !gender) {
+        return res.status(400).json({
+            ERROR: "At least one of name, username, or gender must be provided.",
+        });
+    }
+
+    if (username && username.length < 3) {
+        return res.status(400).json({
+            ERROR: "Username must be at least 3 characters long",
+        });
+    }
+
+    if (name && !/^[a-zA-Z\s]+$/.test(name)) {
+        return res.status(400).json({
+            ERROR: "Name should only contain letters and spaces",
+        });
+    }
+
+  next();
+}
+
+
 module.exports = { 
     createUserMiddleware,
     loginUserMiddleware,
     logoutUserMiddleware,
+    updateUserMiddleware,
 };

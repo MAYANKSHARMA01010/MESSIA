@@ -4,14 +4,16 @@ const authRouter = express.Router()
 const {
     createUserMiddleware,
     loginUserMiddleware,
-    logoutUserMiddleware
+    logoutUserMiddleware,
+    updateUserMiddleware,
 } = require("../middlewares/authMiddleware")
 
 const {
     createUserController,
     loginUserController,
     logoutUserController,
-    getMeController
+    getMeController,
+    updateUserController,
 } = require("../controllers/authController")
 
 const { 
@@ -23,6 +25,6 @@ authRouter.post("/register",createUserMiddleware,createUserController)
 authRouter.post("/login",loginUserMiddleware,loginUserController)
 authRouter.post('/logout',logoutUserMiddleware,logoutUserController)
 authRouter.get("/me",authenticate,getMeController)
-
+authRouter.put("/update", authenticate, updateUserMiddleware, updateUserController);
 
 module.exports = { authRouter }
