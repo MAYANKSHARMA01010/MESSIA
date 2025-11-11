@@ -34,4 +34,5 @@ authRouter.put("/update", authenticate, updateUserMiddleware, updateUserControll
 // /reset-password/:token
 // /delete
 
-module.exports = { authRouter }
+module.exports = authRouter;
+  

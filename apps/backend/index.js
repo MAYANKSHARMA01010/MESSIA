@@ -1,6 +1,6 @@
 const express = require("express");
 const corsMiddleware = require("./config/cors.js");
-const { authRouter } = require("./routes/authRoute.js");
+const authRouter = require("./routes/authRoute.js");
 require("dotenv").config();
 
 const app = express();
@@ -17,6 +17,6 @@ app.get("/", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`✅ Local Backend URL: ${process.env.BACKEND_LOCAL_URL}`);
+  console.log(`✅ Local Backend URL: ${p. rocess.env.BACKEND_LOCAL_URL}`);
   console.log(`✅ Deployed Backend URL: ${process.env.BACKEND_SERVER_URL}`);
 });
