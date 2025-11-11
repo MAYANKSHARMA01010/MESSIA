@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -28,6 +29,8 @@ function Login() {
 
   const getErrorMessage = (err, fallback = "Login failed ❌") => {
     if (err.response?.data?.ERROR) return err.response.data.ERROR;
+    if (err.response?.data?.message) return err.response.data.message;
+    if (err.message?.includes("timeout")) return "Request timed out. Try again.";
     if (err.request) return "No response from server. Check your network.";
     return fallback;
   };
@@ -38,9 +41,17 @@ function Login() {
     setMessage("");
 
     const input = formData.input.trim();
+    const password = formData.password.trim();
+
+    if (!input || !password) {
+      setMessage("⚠️ Email/Username and Password are required");
+      toast.error("⚠️ Email/Username and Password are required");
+      setLoading(false);
+      return;
+    }
 
     const payload = {
-      password: formData.password,
+      password,
       ...(input.includes("@")
         ? { email: input.toLowerCase() }
         : { username: input.toLowerCase() }),
@@ -66,10 +77,11 @@ function Login() {
       }
     } 
     catch (err) {
-      console.error("Login error:", err);
       setLoading(false);
-      toast.error(`❌ ${getErrorMessage(err)}`)
-      setMessage(`❌ ${getErrorMessage(err)}`);
+      const errorMessage = getErrorMessage(err);
+      console.error("Login error:", err);
+      toast.error(`❌ ${errorMessage}`);
+      setMessage(`❌ ${errorMessage}`);
     }
   };
 
@@ -131,7 +143,9 @@ function Login() {
         {message && (
           <p
             className={`text-center mt-4 text-sm ${
-              message.includes("✅") ? "text-green-600" : "text-red-600"
+              message.includes("✅")
+                ? "text-green-600"
+                : "text-red-600 font-medium"
             }`}
           >
             {message}

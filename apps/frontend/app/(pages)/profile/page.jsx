@@ -29,12 +29,21 @@ function ProfilePage() {
     gender: "",
   });
   const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState("");
   const router = useRouter();
 
   const BASE_URL =
     process.env.NODE_ENV === "production"
       ? process.env.NEXT_PUBLIC_BACKEND_SERVER_URL
       : process.env.NEXT_PUBLIC_BACKEND_LOCAL_URL;
+
+  const getErrorMessage = (err, fallback = "Something went wrong ❌") => {
+    if (err.response?.data?.ERROR) return err.response.data.ERROR;
+    if (err.response?.data?.message) return err.response.data.message;
+    if (err.message?.includes("timeout")) return "Request timed out. Try again.";
+    if (err.request) return "No response from server. Check your network.";
+    return fallback;
+  };
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -50,6 +59,7 @@ function ProfilePage() {
       try {
         const res = await axios.get(`${BASE_URL}/api/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
+          timeout: 8000,
         });
 
         if (res.data?.user) {
@@ -59,19 +69,26 @@ function ProfilePage() {
             username: res.data.user.username || "",
             gender: res.data.user.gender || "",
           });
-        } else {
+        } 
+        else {
           toast.error("Invalid response format ❌");
+          setMessage("Invalid response format ❌");
         }
-      } catch (err) {
+      } 
+      catch (err) {
+        const msg = getErrorMessage(err, "Error fetching profile");
         console.error("Profile fetch error:", err);
+        setMessage(`❌ ${msg}`);
         if (err.response?.status === 401) {
           toast.error("Session expired. Please log in again.");
           logout();
           router.push("/login");
-        } else {
-          toast.error("Error fetching profile. Please try again later.");
+        } 
+        else {
+          toast.error(`❌ ${msg}`);
         }
-      } finally {
+      } 
+      finally {
         setLoading(false);
       }
     };
@@ -85,16 +102,13 @@ function ProfilePage() {
     router.push("/");
   };
 
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  const handleChange = (e) =>
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleUpdate = async (e) => {
     e.preventDefault();
     setSaving(true);
+    setMessage("");
 
     try {
       const res = await axios.put(`${BASE_URL}/api/auth/update`, formData, {
@@ -102,19 +116,26 @@ function ProfilePage() {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
+        timeout: 8000,
       });
 
       if (res.data?.user) {
         setUser(res.data.user);
         setEditing(false);
         toast.success("✅ Profile updated successfully!");
-      } else {
-        toast.error(res.data?.ERROR || "Failed to update profile");
+        setMessage("✅ Profile updated successfully!");
+      } 
+      else {
+        const msg = res.data?.ERROR || "Failed to update profile ❌";
+        toast.error(msg);
+        setMessage(`❌ ${msg}`);
       }
     } 
     catch (err) {
+      const msg = getErrorMessage(err, "Error updating profile");
       console.error("Update error:", err);
-      toast.error(err.response?.data?.ERROR || "Error updating profile");
+      toast.error(`❌ ${msg}`);
+      setMessage(`❌ ${msg}`);
     } 
     finally {
       setSaving(false);
@@ -183,6 +204,16 @@ function ProfilePage() {
           <p className="mt-4 text-sm text-gray-500 italic">
             “Spreading smiles, one gift at a time 🎁”
           </p>
+
+          {message && (
+            <p
+              className={`text-center mt-4 text-sm ${
+                message.includes("✅") ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              {message}
+            </p>
+          )}
 
           {!editing ? (
             <>

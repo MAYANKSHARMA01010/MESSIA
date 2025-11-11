@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -20,9 +21,6 @@ function Register() {
 
   const router = useRouter();
 
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
   const BASE_URL =
     process.env.NODE_ENV === "production"
       ? process.env.NEXT_PUBLIC_BACKEND_SERVER_URL
@@ -30,9 +28,14 @@ function Register() {
 
   const getErrorMessage = (err, fallback = "Registration failed ❌") => {
     if (err.response?.data?.ERROR) return err.response.data.ERROR;
+    if (err.response?.data?.message) return err.response.data.message;
+    if (err.message?.includes("timeout")) return "Request timed out. Try again.";
     if (err.request) return "No response from server. Check your network.";
     return fallback;
   };
+
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,15 +49,15 @@ function Register() {
       return;
     }
 
-    try {
-      const payload = {
-        name: formData.name.trim(),
-        username: formData.username.trim().toLowerCase(),
-        email: formData.email.trim().toLowerCase(),
-        password: formData.password,
-        confirm_password: formData.confirm_password,
-      };
+    const payload = {
+      name: formData.name.trim(),
+      username: formData.username.trim().toLowerCase(),
+      email: formData.email.trim().toLowerCase(),
+      password: formData.password,
+      confirm_password: formData.confirm_password,
+    };
 
+    try {
       const res = await axios.post(`${BASE_URL}/api/auth/register`, payload, {
         headers: { "Content-Type": "application/json" },
         timeout: 8000,
@@ -62,9 +65,10 @@ function Register() {
 
       setLoading(false);
 
-      if (res.status === 201 || res.data?.success) {
+      if (res.status === 201 || res.data?.message?.includes("success")) {
         toast.success("✅ Registration successful! Redirecting...");
         setMessage("✅ Registration successful! Redirecting...");
+
         setFormData({
           name: "",
           username: "",
@@ -72,24 +76,26 @@ function Register() {
           password: "",
           confirm_password: "",
         });
+
         setTimeout(() => router.push("/login"), 1200);
       } 
       else {
-        toast.error(res.data?.ERROR || "Registration failed ❌");
-        setMessage(res.data?.ERROR || "Registration failed ❌");
+        const msg = res.data?.ERROR || "Registration failed ❌";
+        toast.error(`❌ ${msg}`);
+        setMessage(`❌ ${msg}`);
       }
     } 
     catch (err) {
+      const msg = getErrorMessage(err);
       console.error("Register error:", err);
       setLoading(false);
-      toast.error(`❌ ${getErrorMessage(err)}`);
-      setMessage(`❌ ${getErrorMessage(err)}`);
+      toast.error(`❌ ${msg}`);
+      setMessage(`❌ ${msg}`);
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-pink-100 via-white to-pink-50 px-4 relative">
-      {/* Back Button */}
       <button
         onClick={() => router.push("/")}
         className="absolute top-6 left-6 flex items-center gap-2 text-gray-700 hover:text-pink-600 transition"
