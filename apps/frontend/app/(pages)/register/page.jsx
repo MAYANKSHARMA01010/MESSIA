@@ -52,6 +52,7 @@ function Register() {
         username: formData.username.trim().toLowerCase(),
         email: formData.email.trim().toLowerCase(),
         password: formData.password,
+        confirm_password: formData.confirm_password,
       };
 
       const res = await axios.post(`${BASE_URL}/api/auth/register`, payload, {
@@ -77,7 +78,8 @@ function Register() {
         toast.error(res.data?.ERROR || "Registration failed ❌");
         setMessage(res.data?.ERROR || "Registration failed ❌");
       }
-    } catch (err) {
+    } 
+    catch (err) {
       console.error("Register error:", err);
       setLoading(false);
       toast.error(`❌ ${getErrorMessage(err)}`);
@@ -96,7 +98,6 @@ function Register() {
         <span className="font-medium">Back to Home</span>
       </button>
 
-      {/* Card */}
       <div className="w-full max-w-md bg-white/90 backdrop-blur-lg p-8 rounded-2xl shadow-lg border border-pink-100">
         <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
           Create your <span className="text-pink-600">Messia</span> account
