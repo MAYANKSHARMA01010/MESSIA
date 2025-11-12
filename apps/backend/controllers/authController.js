@@ -68,6 +68,8 @@ async function loginUserController(req, res) {
 
         const token = createToken(payload);
 
+        console.log("Generated JWT Token:", token);
+
         return res.status(200).json({
             message: "Login successful ✅",
             token,
