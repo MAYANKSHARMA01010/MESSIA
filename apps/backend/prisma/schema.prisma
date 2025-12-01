@@ -8,15 +8,15 @@ datasource db {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  name          String
-  username      String    @unique
-  email         String    @unique
-  password      String
-  gender        String    @default("Prefer not to say")
-  role          Role      @default(USER)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String
+  username  String   @unique
+  email     String   @unique
+  password  String
+  gender    String   @default("Prefer not to say")
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Role {
@@ -24,15 +24,38 @@ enum Role {
   ADMIN
 }
 
-// FUTURE TABLES TO BE ADDED
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  price       Float
+  stock       Int      @default(0)
+  images      String[] // Array of image URLs
+  categoryId  Int
+  category    Category @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
 
+model Category {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  description String?
+  image       String?
+  parentId    Int? // For subcategories
+  parent      Category?  @relation("CategoryToSubcategory", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryToSubcategory")
+  products    Product[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+// FUTURE TABLES TO BE ADDED
 // OTPVERIFICATION TABLE WITH USER ONE TO ONE FOR PHONE AND EMAIL
 // ADDRESS TABLE ONE TO MANY RELATIONSHIP WITH USER
 // ADD TO CART ONE TO MANY RELATIONSHIP WITH USER AND PRODUCT
 // ORDER TABLE WITH USER AND PRODUCT RELATIONSHIP 
 // PAYMENT TABLE WITH ORDER RELATIONSHIP
-// PRODUCT TABLE WITH CATEGORY RELATIONSHIP
-// CATEGORY TABLE WITH SELF RELATIONSHIP FOR SUBCATEGORIES
 // REVIEW TABLE WITH USER AND PRODUCT RELATIONSHIP
 // WISHLIST TABLE WITH USER AND PRODUCT RELATIONSHIP
 // INVENTORY TABLE WITH PRODUCT RELATIONSHIP
