@@ -43,14 +43,6 @@ function Navbar() {
             >
               Products
             </Link>
-            {isAdmin && (
-              <Link
-                href="/admin"
-                className="text-gray-700 hover:text-pink-600 transition"
-              >
-                Admin
-              </Link>
-            )}
             <Link
               href="/about"
               className="text-gray-700 hover:text-pink-600 transition"
@@ -118,15 +110,6 @@ function Navbar() {
             >
               Products
             </Link>
-            {isAdmin && (
-              <Link
-                href="/admin"
-                onClick={() => setIsOpen(false)}
-                className="block text-gray-700 hover:text-pink-600"
-              >
-                Admin
-              </Link>
-            )}
             <Link
               href="/about"
               onClick={() => setIsOpen(false)}
