@@ -2,42 +2,65 @@ const { prisma } = require("../config/database");
 const { createToken } = require("../utils/auth");
 const bcrypt = require("bcrypt");
 
-
+/* REGISTER */
 async function createUserController(req, res) {
-    let { name, username, email, password } = req.body;
-
     try {
+        let { name, username, email, password } = req.body;
+
+        if (!name || !username || !email || !password)
+            return res.status(400).json({
+                ERROR: "All fields are required",
+            });
+
         name = name.trim();
         username = username.trim().toLowerCase();
         email = email.trim().toLowerCase();
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const exists = await prisma.user.findFirst({
+            where: { OR: [{ email }, { username }] },
+        });
 
-        const newUser = await prisma.user.create({
-            data: { name, username, email, password: hashedPassword },
+        if (exists)
+            return res.status(400).json({
+                ERROR: "Username or Email already exists",
+            });
+
+        const hash = await bcrypt.hash(password, 10);
+
+        const user = await prisma.user.create({
+            data: {
+                name,
+                username,
+                email,
+                password: hash,
+            },
         });
 
         return res.status(201).json({
-            message: "User registered successfully",
+            message: "✅ Registered",
             user: {
-                id: newUser.id,
-                name: newUser.name,
-                username: newUser.username,
-                email: newUser.email,
+                id: user.id,
+                name: user.name,
+                username: user.username,
+                email: user.email,
             },
         });
-    } 
-    catch (err) {
-        console.error("CreateUser error:", err);
-        return res.status(500).json({ ERROR: "Internal Server Error while creating user" });
+    } catch (err) {
+        console.error("REGISTER ERROR:", err);
+        res.status(500).json({ ERROR: "Register failed" });
     }
 }
 
-
+/* LOGIN */
 async function loginUserController(req, res) {
-    let { email, username, password } = req.body;
-
     try {
+        let { email, username, password } = req.body;
+
+        if (!password || (!email && !username))
+            return res.status(400).json({
+                ERROR: "Email/Username and password required",
+            });
+
         if (email) email = email.trim().toLowerCase();
         if (username) username = username.trim().toLowerCase();
 
@@ -50,104 +73,124 @@ async function loginUserController(req, res) {
             },
         });
 
-        if (!user) {
-            return res.status(404).json({ ERROR: "User not found" });
-        }
+        if (!user)
+            return res.status(404).json({
+                ERROR: "User not found",
+            });
 
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(401).json({ ERROR: "Invalid credentials" });
-        }
+        const ok = await bcrypt.compare(password, user.password);
+        if (!ok)
+            return res.status(401).json({
+                ERROR: "Invalid credentials",
+            });
 
-        const payload = {
+        // ✅ MUST CONTAIN ID
+        const token = createToken({
             id: user.id,
-            name: user.name,
             email: user.email,
             username: user.username,
-        };
+            role: user.role,
+        });
 
-        const token = createToken(payload);
-
-        console.log("Generated JWT Token:", token);
-
-        return res.status(200).json({
-            message: "Login successful ✅",
+        return res.json({
+            message: "✅ Login successful",
             token,
             user: {
                 id: user.id,
                 name: user.name,
-                email: user.email,
                 username: user.username,
+                email: user.email,
+                gender: user.gender,
+                role: user.role,
             },
         });
-    } 
-    catch (err) {
-        console.error("Login Error:", err);
-        return res.status(500).json({ ERROR: "Internal Server Error" });
+    } catch (err) {
+        console.error("LOGIN ERROR:", err);
+        res.status(500).json({ ERROR: "Login failed" });
     }
 }
 
-
+/* LOGOUT */
 async function logoutUserController(req, res) {
-    try {
-        return res.status(200).json({ message: "Logout successful" });
-    } 
-    catch (error) {
-        console.error("Logout error:", error);
-        return res.status(500).json({ ERROR: "Logout failed" });
-    }
+    return res.json({
+        message: "✅ Logout successful",
+    });
 }
 
-
+/* GET ME */
 async function getMeController(req, res) {
     try {
-        const userId = req.user.id;
+        if (!req.user?.id)
+            return res.status(401).json({
+                ERROR: "Invalid token payload",
+            });
+
         const user = await prisma.user.findUnique({
-            where: { id: userId },
-            select: { id: true, name: true, username: true, email: true, gender: true },
+            where: { id: req.user.id },
+            select: {
+                id: true,
+                name: true,
+                username: true,
+                email: true,
+                gender: true,
+                role: true,
+                createdAt: true,
+            },
         });
 
-        if (!user) return res.status(404).json({ ERROR: "User not found" });
+        if (!user)
+            return res.status(404).json({
+                ERROR: "User not found",
+            });
 
-        return res.status(200).json({ message: "User fetched successfully", user });
-    } 
-    catch (error) {
-        console.error("GetMe error:", error);
-        return res.status(500).json({ ERROR: "Internal Server Error" });
+        res.json({
+            message: "✅ User fetched",
+            user,
+        });
+    } catch (err) {
+        console.error("GETME ERROR:", err);
+        res.status(500).json({ ERROR: "GetMe failed" });
     }
 }
 
-
+/* UPDATE PROFILE */
 async function updateUserController(req, res) {
     try {
-        const userId = req.user.id;
+        if (!req.user?.id)
+            return res.status(401).json({
+                ERROR: "Unauthorized",
+            });
+
         let { name, username, gender } = req.body;
+        const data = {};
 
-        const updateData = {};
+        if (name?.trim()) data.name = name.trim();
+        if (username?.trim())
+            data.username = username.trim().toLowerCase();
+        if (gender?.trim()) data.gender = gender.trim();
 
-        if (name && name.trim()) updateData.name = name.trim();
-        if (username && username.trim()) updateData.username = username.trim().toLowerCase();
-        if (gender && gender.trim()) updateData.gender = gender.trim();
+        if (!Object.keys(data).length)
+            return res.status(400).json({
+                ERROR: "Nothing to update",
+            });
 
-        if (Object.keys(updateData).length === 0) {
-            return res.status(400).json({ ERROR: "No valid fields provided for update" });
-        }
-
-        if (updateData.username) {
-            const existingUser = await prisma.user.findFirst({
+        if (data.username) {
+            const taken = await prisma.user.findFirst({
                 where: {
-                    username: updateData.username,
-                    NOT: { id: userId },
+                    username: data.username,
+                    NOT: { id: req.user.id },
                 },
             });
-            if (existingUser) {
-                return res.status(400).json({ ERROR: "Username already taken" });
-            }
+
+            if (taken)
+                return res.status(400).json({
+                    ERROR: "Username already taken",
+                });
         }
 
-        const updatedUser = await prisma.user.update({
-            where: { id: userId },
-            data: updateData,
+        const user = await prisma.user.update({
+            where: { id: req.user.id },
+            data,
             select: {
                 id: true,
                 name: true,
@@ -158,16 +201,13 @@ async function updateUserController(req, res) {
             },
         });
 
-        return res.status(200).json({
-            message: "✅ Profile updated successfully",
-            user: updatedUser,
+        return res.json({
+            message: "✅ Profile updated",
+            user,
         });
-    } 
-    catch (err) {
-        console.error("UpdateUser error:", err);
-        return res.status(500).json({
-            ERROR: "Internal Server Error while updating user",
-        });
+    } catch (err) {
+        console.error("UPDATE ERROR:", err);
+        res.status(500).json({ ERROR: "Update failed" });
     }
 }
 

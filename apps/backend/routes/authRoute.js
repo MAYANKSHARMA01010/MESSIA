@@ -1,12 +1,5 @@
-const express = require("express")
-const authRouter = express.Router()
-
-const {
-    createUserMiddleware,
-    loginUserMiddleware,
-    logoutUserMiddleware,
-    updateUserMiddleware,
-} = require("../middlewares/authMiddleware")
+const express = require("express");
+const authRouter = express.Router();
 
 const {
     createUserController,
@@ -14,17 +7,22 @@ const {
     logoutUserController,
     getMeController,
     updateUserController,
-} = require("../controllers/authController")
+} = require("../controllers/authController");
 
-const { 
-    authenticate 
-} = require("../utils/auth")
+const {
+    createUserMiddleware,
+    loginUserMiddleware,
+    logoutUserMiddleware,
+    updateUserMiddleware,
+} = require("../middlewares/authMiddleware");
 
+const { authenticate } = require("../utils/auth");
 
-authRouter.post("/register",createUserMiddleware,createUserController)
-authRouter.post("/login",loginUserMiddleware,loginUserController)
-authRouter.post('/logout',logoutUserMiddleware,logoutUserController)
-authRouter.get("/me",authenticate,getMeController)
+authRouter.post("/register", createUserMiddleware, createUserController);
+authRouter.post("/login", loginUserMiddleware, loginUserController);
+authRouter.post("/logout", logoutUserMiddleware, logoutUserController);
+
+authRouter.get("/me", authenticate, getMeController);
 authRouter.put("/update", authenticate, updateUserMiddleware, updateUserController);
 
 // Future addition ROUTES :-
@@ -35,4 +33,3 @@ authRouter.put("/update", authenticate, updateUserMiddleware, updateUserControll
 // /delete
 
 module.exports = authRouter;
-  

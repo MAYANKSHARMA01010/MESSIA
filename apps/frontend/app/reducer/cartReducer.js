@@ -7,17 +7,19 @@ export const initialCartState = {
 export const cartReducer = (state, action) => {
   switch (action.type) {
 
-    // Add item
+    /* ---------------------------------
+        ADD ITEM (LOCAL UPDATE)
+    ----------------------------------*/
     case "ADD_TO_CART": {
       const existing = state.items.find(
-        (i) => i.id === action.payload.id
+        (i) => i.productId === action.payload.productId   // ✅ FIX
       );
 
       let updatedItems;
 
       if (existing) {
         updatedItems = state.items.map((i) =>
-          i.id === action.payload.id
+          i.productId === action.payload.productId
             ? { ...i, quantity: i.quantity + 1 }
             : i
         );
@@ -31,10 +33,12 @@ export const cartReducer = (state, action) => {
       return recalc({ ...state, items: updatedItems });
     }
 
-    // Increase quantity
+    /* ---------------------------------
+        INCREASE QTY
+    ----------------------------------*/
     case "INCREASE_QTY": {
       const updatedItems = state.items.map((i) =>
-        i.id === action.payload
+        i.productId === action.payload
           ? { ...i, quantity: i.quantity + 1 }
           : i
       );
@@ -42,39 +46,55 @@ export const cartReducer = (state, action) => {
       return recalc({ ...state, items: updatedItems });
     }
 
-    // Decrease quantity
+    /* ---------------------------------
+        DECREASE QTY
+    ----------------------------------*/
     case "DECREASE_QTY": {
       const updatedItems = state.items
         .map((i) =>
-          i.id === action.payload
+          i.productId === action.payload
             ? { ...i, quantity: i.quantity - 1 }
             : i
         )
+        .filter(Boolean)
         .filter((i) => i.quantity > 0);
 
       return recalc({ ...state, items: updatedItems });
     }
 
-    // Remove item
+    /* ---------------------------------
+        REMOVE ITEM
+    ----------------------------------*/
     case "REMOVE_FROM_CART": {
       const updatedItems = state.items.filter(
-        (i) => i.id !== action.payload
+        (i) => i.productId !== action.payload
       );
 
       return recalc({ ...state, items: updatedItems });
     }
 
-    // Clear entire cart
-    case "CLEAR_CART": {
+    /* ---------------------------------
+        BACKEND SYNC
+    ----------------------------------*/
+    case "SET_CART":
+      return {
+        items: action.payload.items || [],
+        totalItems: action.payload.totalItems || 0,
+        totalPrice: action.payload.totalPrice || 0,
+      };
+
+    case "CLEAR_CART":
       return initialCartState;
-    }
 
     default:
       return state;
   }
 };
 
-// Totals calculator
+/* ================================
+    TOTALS CALCULATOR
+================================ */
+
 const recalc = (state) => {
   let totalItems = 0;
   let totalPrice = 0;
