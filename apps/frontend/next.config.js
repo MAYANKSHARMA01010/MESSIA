@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  outputFileTracingRoot: __dirname,
+  images: {
+    domains: [
+      "picsum.photos",
+      "placehold.co"
+    ],
+  },
 };
 
 module.exports = nextConfig;
