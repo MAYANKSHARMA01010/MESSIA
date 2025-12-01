@@ -14,11 +14,10 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const slides = [
   {
-    id: 1, 
-    image: "/hero1.jpg",
+    id: 1,
+    image: "/HomeSectionBgImg.jpg",
     title: "Welcome to MESSIA",
-    subtitle:
-      "Your magical destination for personalized and thoughtful gifts.",
+    subtitle: "Your magical destination for personalized and thoughtful gifts.",
   },
   {
     id: 2,
@@ -29,17 +28,16 @@ const slides = [
   },
   {
     id: 3,
-    image: "/flower.jpg",
+    image: "/HomeSectionBgImg.jpg",
     title: "Bloom with Love",
     subtitle:
       "Send beautiful floral gifts that speak the language of emotion with MESSIA.",
   },
   {
     id: 4,
-    image: "/hero3.jpg",
+    image: "/HomeSectionBgImg.jpg",
     title: "Make Every Occasion Special",
-    subtitle:
-      "From birthdays to anniversaries, let MESSIA handle the magic.",
+    subtitle: "From birthdays to anniversaries, let MESSIA handle the magic.",
   },
 ];
 
