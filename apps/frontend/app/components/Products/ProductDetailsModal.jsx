@@ -1,33 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  X,
-  ShoppingBag,
-  Check,
-  AlertCircle,
-  Plus,
-  Minus,
-} from "lucide-react";
+import { X, ShoppingBag, Check, AlertCircle, Plus, Minus } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
 
-export default function ProductDetailsModal({
-  product,
-  isOpen,
-  onClose,
-}) {
+export default function ProductDetailsModal({ product, isOpen, onClose }) {
   const [activeImage, setActiveImage] = useState(0);
 
-  const {
-    cart,
-    addToCart,
-    increaseQty,
-    decreaseQty,
-  } = useCart();
+  const { cart, addToCart, increaseQty, decreaseQty } = useCart();
 
-  const itemInCart = cart.find(
-    (i) => i.id === product?.id
-  );
+  const itemInCart = cart.find((i) => i.productId === product?.id);
 
   useEffect(() => {
     if (isOpen) document.body.style.overflow = "hidden";
@@ -52,7 +34,6 @@ export default function ProductDetailsModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
-
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
@@ -61,7 +42,6 @@ export default function ProductDetailsModal({
 
       {/* Modal */}
       <div className="relative w-full max-w-5xl rounded-3xl bg-white shadow-2xl dark:bg-gray-900 flex flex-col md:flex-row max-h-[90vh]">
-
         {/* Close */}
         <button
           onClick={onClose}
@@ -72,7 +52,6 @@ export default function ProductDetailsModal({
 
         {/* Gallery */}
         <div className="w-full md:w-1/2 bg-gray-100 dark:bg-gray-800 flex flex-col relative">
-
           <div className="flex-1 overflow-hidden">
             <img
               src={images[activeImage]}
@@ -107,7 +86,6 @@ export default function ProductDetailsModal({
 
         {/* Product Details */}
         <div className="w-full md:w-1/2 p-8 overflow-y-auto">
-
           <div className="space-y-6">
             <div>
               <p className="text-sm uppercase text-pink-600 tracking-wide">
@@ -142,7 +120,6 @@ export default function ProductDetailsModal({
 
             {/* CART ACTIONS */}
             <div className="pt-6 border-t">
-
               {!itemInCart && (
                 <button
                   onClick={() => addToCart(product)}
@@ -156,7 +133,6 @@ export default function ProductDetailsModal({
 
               {itemInCart && (
                 <div className="flex items-center justify-center gap-6">
-
                   <button
                     onClick={() => decreaseQty(product.id)}
                     className="p-3 rounded-lg bg-gray-100 hover:bg-gray-200 transition"
@@ -174,19 +150,15 @@ export default function ProductDetailsModal({
                   >
                     <Plus size={20} />
                   </button>
-
                 </div>
               )}
-
             </div>
 
             {/* Footer Promo */}
             <p className="text-center text-xs text-gray-400">
               Free shipping on orders over ₹1000 • 30-day returns
             </p>
-
           </div>
-
         </div>
       </div>
     </div>
