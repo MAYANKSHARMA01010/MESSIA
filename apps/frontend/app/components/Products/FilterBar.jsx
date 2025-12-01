@@ -15,7 +15,6 @@ export default function FilterBar({
   return (
     <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100 dark:bg-gray-950/80 dark:border-gray-800 py-4 px-4 sm:px-6 lg:px-8 transition-all">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-4 items-center justify-between">
-        {/* Search */}
         <div className="relative w-full md:w-96 group">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <Search
@@ -32,9 +31,7 @@ export default function FilterBar({
           />
         </div>
 
-        {/* Filters & Sort */}
         <div className="flex items-center gap-3 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 no-scrollbar">
-          {/* Category Pills */}
           <div className="flex items-center gap-2 pr-4 border-r border-gray-200 dark:border-gray-700">
             <button
               onClick={() => setSelectedCategory("all")}
@@ -61,7 +58,6 @@ export default function FilterBar({
             ))}
           </div>
 
-          {/* Sort Dropdown */}
           <div className="relative min-w-[160px]">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <ArrowUpDown size={16} className="text-gray-400" />

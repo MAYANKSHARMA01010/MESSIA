@@ -22,10 +22,6 @@ import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import HomeSection from "./components/LandingPage/HomeSection";
 
-/* -------------------------
-   DUMMY DATA
---------------------------*/
-
 const featuredProducts = [
   {
     id: 1,
@@ -84,10 +80,6 @@ const features = [
   },
 ];
 
-/* -------------------------
-   HOME PAGE
---------------------------*/
-
 export default function HomePage() {
   const router = useRouter();
 
@@ -97,10 +89,8 @@ export default function HomePage() {
 
       <main className="overflow-x-hidden">
 
-        {/* ================= HERO SLIDER ================= */}
         <HomeSection ctaOnClick={() => router.push("/products")} />
 
-        {/* ================= CATEGORIES ================= */}
         <section className="py-14 bg-white">
           <div className="max-w-7xl mx-auto px-6">
             <h2 className="section-title">Browse Categories</h2>
@@ -120,7 +110,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ================= FEATURED PRODUCTS ================= */}
         <section className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-6">
             <h2 className="section-title">Featured Gifts</h2>
@@ -164,7 +153,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ================= OCCASIONS ================= */}
         <section className="py-14 bg-white">
           <div className="max-w-7xl mx-auto px-6">
             <h2 className="section-title">Shop by Occasion</h2>
@@ -184,7 +172,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ================= WHY MESSIA ================= */}
         <section className="py-16 bg-gray-50">
           <div className="max-w-6xl mx-auto px-6 text-center">
             <h2 className="section-title">Why Choose Messia?</h2>
@@ -214,7 +201,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ================= CONTACT PREVIEW ================= */}
         <section className="py-16 bg-white">
           <div className="max-w-6xl mx-auto px-6 text-center">
             <h2 className="section-title">Need Help?</h2>
@@ -238,7 +224,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ================= FINAL CTA ================= */}
         <section className="py-24 bg-gradient-to-r from-pink-600 to-red-500 text-white text-center">
           <h2 className="text-4xl font-bold">
             Make Someone Smile Today ❤️
@@ -263,9 +248,6 @@ export default function HomePage() {
   );
 }
 
-/* -------------------------
-   MINI COMPONENTS
---------------------------*/
 const InfoItem = ({ icon, text }) => (
   <div className="flex items-center gap-2 text-gray-700">
     {icon}

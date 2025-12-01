@@ -20,7 +20,6 @@ export default function ProductDetailsModal({ product, isOpen, onClose }) {
     };
   }, [isOpen]);
 
-  // Reset image when product changes
   useEffect(() => {
     if (product) setActiveImage(0);
   }, [product]);
@@ -34,15 +33,12 @@ export default function ProductDetailsModal({ product, isOpen, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* Modal */}
       <div className="relative w-full max-w-5xl rounded-3xl bg-white shadow-2xl dark:bg-gray-900 flex flex-col md:flex-row max-h-[90vh]">
-        {/* Close */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 z-10 rounded-full bg-white/80 p-2 text-gray-500 hover:text-gray-900 transition dark:bg-black/50 dark:text-gray-300"
@@ -50,7 +46,6 @@ export default function ProductDetailsModal({ product, isOpen, onClose }) {
           <X size={24} />
         </button>
 
-        {/* Gallery */}
         <div className="w-full md:w-1/2 bg-gray-100 dark:bg-gray-800 flex flex-col relative">
           <div className="flex-1 overflow-hidden">
             <img
@@ -60,7 +55,6 @@ export default function ProductDetailsModal({ product, isOpen, onClose }) {
             />
           </div>
 
-          {/* Thumbnails */}
           {images.length > 1 && (
             <div className="flex gap-2 p-4 bg-white/50 dark:bg-black/30 absolute bottom-0 w-full overflow-x-auto backdrop-blur-sm">
               {images.map((img, idx) => (
@@ -84,7 +78,6 @@ export default function ProductDetailsModal({ product, isOpen, onClose }) {
           )}
         </div>
 
-        {/* Product Details */}
         <div className="w-full md:w-1/2 p-8 overflow-y-auto">
           <div className="space-y-6">
             <div>
@@ -113,12 +106,10 @@ export default function ProductDetailsModal({ product, isOpen, onClose }) {
               </div>
             </div>
 
-            {/* Description */}
             <p className="text-gray-600 dark:text-gray-300">
               {product.description}
             </p>
 
-            {/* CART ACTIONS */}
             <div className="pt-6 border-t">
               {!itemInCart && (
                 <button
@@ -154,7 +145,6 @@ export default function ProductDetailsModal({ product, isOpen, onClose }) {
               )}
             </div>
 
-            {/* Footer Promo */}
             <p className="text-center text-xs text-gray-400">
               Free shipping on orders over ₹1000 • 30-day returns
             </p>
