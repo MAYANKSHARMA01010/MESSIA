@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
@@ -8,8 +8,19 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 import { API_BASE_URL } from "../../utils/api";
+import { useAuth } from "../../context/AuthContext";
 
 function Register() {
+  const { isLoggedIn } = useAuth();
+  const router = useRouter();
+
+  // ✅ BLOCK PAGE IF ALREADY LOGGED IN
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.replace("/"); // redirect to home
+    }
+  }, [isLoggedIn, router]);
+
   const [formData, setFormData] = useState({
     name: "",
     username: "",
@@ -20,8 +31,6 @@ function Register() {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-
-  const router = useRouter();
 
   const getErrorMessage = (err, fallback = "Registration failed ❌") => {
     if (err.response?.data?.ERROR) return err.response.data.ERROR;

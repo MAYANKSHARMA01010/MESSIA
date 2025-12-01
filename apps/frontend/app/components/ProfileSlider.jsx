@@ -1,4 +1,5 @@
 import React from "react";
+import toast from "react-hot-toast";
 import {
   User,
   LayoutDashboard,
@@ -13,6 +14,11 @@ import {
   Trash2,
 } from "lucide-react";
 
+const comingSoon = (feature) =>
+  toast("🚧 " + feature + " coming soon!", {
+    duration: 2500,
+  });
+
 const ProfileSlider = ({ isAdmin, onNav, onLogout }) => {
   return (
     <div className="absolute right-0 mt-3 w-60 bg-white border shadow-xl rounded-xl p-2 space-y-1 animate-slideDown">
@@ -23,19 +29,23 @@ const ProfileSlider = ({ isAdmin, onNav, onLogout }) => {
       </p>
 
       <SliderButton icon={<User size={16} />} label="Profile" onClick={() => onNav("/profile")} />
-      <SliderButton icon={<ShoppingBag size={16} />} label="My Orders" onClick={() => onNav("/orders")} />
-      <SliderButton icon={<MapPin size={16} />} label="Manage Addresses" onClick={() => onNav("/addresses")} />
+      <SliderButton icon={<ShoppingBag size={16} />} label="My Orders" onClick={() => comingSoon("Orders")} />
       <SliderButton icon={<Heart size={16} />} label="Wishlist" onClick={() => onNav("/wishlist")} />
       <SliderButton icon={<ShoppingCart size={16} />} label="My Cart" onClick={() => onNav("/cart")} />
+      <SliderButton icon={<MapPin size={16} />} label="Manage Addresses" onClick={() => onNav("/addresses")} />
 
       <hr />
 
       {/* PAYMENTS */}
-      <p className="px-3 py-1 text-xs text-gray-400 uppercase tracking-wide">
+      <p className="px-3 py-1 text-xs text-gray-400 uppercase tracking-wide">1``
         Payments
       </p>
 
-      <SliderButton icon={<CreditCard size={16} />} label="Saved Cards" onClick={() => onNav("/payments")} />
+      <SliderButton
+        icon={<CreditCard size={16} />}
+        label="Saved Cards"
+        onClick={() => comingSoon("Saved cards")}
+      />
 
       <hr />
 
@@ -44,8 +54,16 @@ const ProfileSlider = ({ isAdmin, onNav, onLogout }) => {
         Settings
       </p>
 
-      <SliderButton icon={<Bell size={16} />} label="Notifications" onClick={() => onNav("/notifications")} />
-      <SliderButton icon={<HelpCircle size={16} />} label="Help & Support" onClick={() => onNav("/support")} />
+      <SliderButton
+        icon={<Bell size={16} />}
+        label="Notifications"
+        onClick={() => comingSoon("Notifications")}
+      />
+      <SliderButton
+        icon={<HelpCircle size={16} />}
+        label="Help & Support"
+        onClick={() => comingSoon("Support center")}
+      />
 
       {/* ADMIN */}
       {isAdmin && (
@@ -76,16 +94,15 @@ const ProfileSlider = ({ isAdmin, onNav, onLogout }) => {
       <SliderButton
         icon={<Trash2 size={16} />}
         label="Delete Account"
-        onClick={() => onNav("/delete-account")}
+        onClick={() => comingSoon("Account deletion")}
         dangerOutline
       />
-
     </div>
   );
 };
 
 /* -------------------------------------------------------
-   INLINE BUTTON — SINGLE FILE ONLY (NO EXTRA COMPONENT)
+   INLINE BUTTON — SINGLE FILE ONLY
 --------------------------------------------------------*/
 const SliderButton = ({
   icon,
