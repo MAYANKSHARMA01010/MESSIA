@@ -115,3 +115,24 @@ a {
 button:active {
   transform: scale(0.98);
 }
+
+
+/* -------------------------
+   HOME PAGE STYLES
+--------------------------*/
+
+.section-title {
+  @apply text-3xl font-serif font-bold text-gray-800 text-center;
+}
+
+.category-card {
+  @apply flex flex-col items-center gap-3 bg-pink-50 rounded-2xl p-6 text-pink-700 hover:bg-pink-100 transition hover:scale-105;
+}
+
+.occasion-card {
+  @apply flex flex-col items-center gap-3 bg-red-50 rounded-2xl p-6 text-red-600 hover:bg-red-100 transition hover:scale-105;
+}
+
+.product-card {
+  @apply text-left bg-white rounded-2xl shadow-sm hover:shadow-lg transition hover:scale-105 overflow-hidden p-3;
+}
