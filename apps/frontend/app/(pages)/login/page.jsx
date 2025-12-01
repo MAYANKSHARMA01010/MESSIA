@@ -12,7 +12,7 @@ function Login() {
   const [formData, setFormData] = useState({
     input: "",
     password: "",
-  });
+  }); 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 

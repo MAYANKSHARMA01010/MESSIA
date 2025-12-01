@@ -14,7 +14,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const slides = [
   {
-    id: 1,
+    id: 1, 
     image: "/hero1.jpg",
     title: "Welcome to MESSIA",
     subtitle:

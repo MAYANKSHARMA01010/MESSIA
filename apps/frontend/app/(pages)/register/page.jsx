@@ -18,7 +18,7 @@ function Register() {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-
+ 
   const router = useRouter();
 
   const BASE_URL =

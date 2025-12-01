@@ -13,7 +13,7 @@ function Navbar() {
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
-  const handleNavClick = (path) => {
+  const handleNavClick = (path) => { 
     router.push(path);
     setIsOpen(false);
   };

@@ -62,7 +62,7 @@ export default function Footer() {
                             <FooterLink href="/products">Products</FooterLink>
                             <FooterLink href="/about">About Us</FooterLink>
                             <FooterLink href="/contact">Contact</FooterLink>
-                            <FooterLink href="/profile/faqs">FAQ</FooterLink>
+                            <FooterLink href="/faqs">FAQ</FooterLink>
                         </ul>
                     </div>
 
@@ -71,11 +71,11 @@ export default function Footer() {
                         <h5 className="text-base font-semibold mb-4">Customer Service</h5>
 
                         <ul className="space-y-2 text-sm">
-                            <FooterLink href="/returns">Shipping Info</FooterLink>
-                            <FooterLink href="/profile/faqs">Returns</FooterLink>
-                            <FooterLink href="/profile/faqs">Size Guide</FooterLink>
-                            <FooterLink href="/profile/faqs">Care Instructions</FooterLink>
-                            <FooterLink href="/profile/faqs">Wholesale</FooterLink>
+                            <FooterLink href="/faqs">Shipping Info</FooterLink>
+                            <FooterLink href="/faqs">Returns</FooterLink>
+                            <FooterLink href="/faqs">Size Guide</FooterLink>
+                            <FooterLink href="/faqs">Care Instructions</FooterLink>
+                            <FooterLink href="/faqs">Wholesale</FooterLink>
                         </ul>
                     </div>
                 </div>
@@ -85,9 +85,9 @@ export default function Footer() {
                     <p>© 2024 Essia. All rights reserved.</p>
 
                     <div className="flex gap-4 flex-wrap justify-center sm:justify-end">
-                        <FooterLink href="/profile/privacy">Privacy Policy</FooterLink>
-                        <FooterLink href="/profile/terms">Terms of Service</FooterLink>
-                        <FooterLink href="/profile/cookie-policy">Cookie Policy</FooterLink>
+                        <FooterLink href="/privacy">Privacy Policy</FooterLink>
+                        <FooterLink href="/terms">Terms of Service</FooterLink>
+                        <FooterLink href="/cookie-policy">Cookie Policy</FooterLink>
                     </div>
                 </div>
             </div>
