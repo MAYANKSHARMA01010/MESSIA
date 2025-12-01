@@ -2,7 +2,8 @@ const { prisma } = require("../config/database");
 
 async function createProduct(req, res) {
   try {
-    const { name, description, price, stock, categoryId, images } = req.body;
+    const { name, description, price, stock, categoryId, images, isVisible } =
+      req.body;
 
     const category = await prisma.category.findUnique({
       where: { id: categoryId },
@@ -20,6 +21,7 @@ async function createProduct(req, res) {
         stock: stock || 0,
         categoryId,
         images: images || [],
+        isVisible: isVisible !== undefined ? isVisible : true,
       },
     });
 
@@ -37,7 +39,7 @@ async function createProduct(req, res) {
 
 async function getAllProducts(req, res) {
   try {
-    const { page = 1, limit = 10, categoryId } = req.query;
+    const { page = 1, limit = 10, categoryId, showHidden } = req.query;
     const skip = (page - 1) * limit;
 
     const where = {};
@@ -45,14 +47,24 @@ async function getAllProducts(req, res) {
       where.categoryId = parseInt(categoryId);
     }
 
-    const products = await prisma.product.findMany({
-      where,
-      skip: parseInt(skip),
-      take: parseInt(limit),
-      include: { category: true },
-    });
+    // By default, only show visible products.
+    // Admin can pass showHidden=true to see everything (logic for admin check can be added here or in middleware)
+    // For now, let's assume public API only shows visible, unless a specific flag is passed (which we might restrict later)
+    if (showHidden !== "true") {
+      where.isVisible = true;
+    }
 
-    const total = await prisma.product.count({ where });
+    // Run queries in parallel for optimization
+    const [products, total] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        skip: parseInt(skip),
+        take: parseInt(limit),
+        include: { category: true },
+        orderBy: { createdAt: "desc" }, // Good practice to have default sort
+      }),
+      prisma.product.count({ where }),
+    ]);
 
     return res.status(200).json({
       message: "Products fetched successfully",
@@ -99,7 +111,8 @@ async function getProductById(req, res) {
 async function updateProduct(req, res) {
   try {
     const { id } = req.params;
-    const { name, description, price, stock, categoryId, images } = req.body;
+    const { name, description, price, stock, categoryId, images, isVisible } =
+      req.body;
 
     const existingProduct = await prisma.product.findUnique({
       where: { id: parseInt(id) },
@@ -127,6 +140,7 @@ async function updateProduct(req, res) {
         stock: stock !== undefined ? stock : undefined,
         categoryId: categoryId || undefined,
         images: images || undefined,
+        isVisible: isVisible !== undefined ? isVisible : undefined,
       },
     });
 

@@ -1,5 +1,6 @@
 function validateProduct(req, res, next) {
-  let { name, description, price, stock, categoryId, images } = req.body;
+  let { name, description, price, stock, categoryId, images, isVisible } =
+    req.body;
 
   if (!name || !description || !price || !categoryId) {
     return res
@@ -23,6 +24,10 @@ function validateProduct(req, res, next) {
     return res
       .status(400)
       .json({ ERROR: "Images must be an array of URL strings" });
+  }
+
+  if (isVisible !== undefined && typeof isVisible !== "boolean") {
+    return res.status(400).json({ ERROR: "isVisible must be a boolean" });
   }
 
   req.body.name = name.trim();
