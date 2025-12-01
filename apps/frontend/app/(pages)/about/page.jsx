@@ -1,20 +1,62 @@
 "use client";
 
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent } from "../components/ui/card";
-import { Button } from "../components/ui/button";
 import {
   Leaf,
   Heart,
   Award,
   Truck,
-  Gift,
-  Sparkles,
-  ShieldCheck,
+  Gift
 } from "lucide-react";
+
+import Navbar from "@/app/components/Navbar";
+import Footer from "@/app/components/Footer";
+
+/* -------------------------
+   SIMPLE INLINE UI (NO SHADCN)
+--------------------------*/
+
+const Card = ({ children, className = "" }) => {
+  return (
+    <div
+      className={`bg-white rounded-xl border shadow-sm hover:shadow-xl transition ${className}`}
+    >
+      {children}
+    </div>
+  );
+};
+
+const CardContent = ({ children, className = "" }) => {
+  return <div className={`p-8 ${className}`}>{children}</div>;
+};
+
+const Button = ({
+  children,
+  variant = "default",
+  className = "",
+}) => {
+  const base =
+    "inline-flex items-center justify-center rounded-full font-medium transition focus:outline-none";
+  const styles = {
+    default:
+      "bg-pink-600 text-white hover:bg-pink-700 px-8 py-3",
+    outline:
+      "border border-white text-white hover:bg-white hover:text-pink-600 px-8 py-3",
+    light:
+      "bg-white text-pink-600 hover:bg-gray-100 px-8 py-3",
+  };
+
+  return (
+    <button className={`${base} ${styles[variant]} ${className}`}>
+      {children}
+    </button>
+  );
+};
+
+/* -------------------------
+   ABOUT PAGE
+--------------------------*/
 
 export default function About() {
   const values = [
@@ -40,7 +82,7 @@ export default function About() {
       icon: <Truck className="h-8 w-8 text-pink-600" />,
       title: "Fast Delivery",
       description:
-        "Pan-India delivery with careful packaging & reliable shipping partners.",
+        "Pan-India delivery with careful packaging & trusted shipping partners.",
     },
   ];
 
@@ -84,13 +126,13 @@ export default function About() {
       step: "03",
       title: "Hand Pack",
       description:
-        "Artisan team carefully packs items to ensure safety and presentation.",
+        "Artisan team carefully packs items to ensure safety & presentation.",
     },
     {
       step: "04",
       title: "Deliver Happiness",
       description:
-        "Fast shipping ensures your loved ones receive joy right on time.",
+        "Fast shipping ensures your loved ones receive joy on time.",
     },
   ];
 
@@ -100,19 +142,19 @@ export default function About() {
 
       <div className="min-h-screen bg-gray-50 pt-20">
 
-        {/* ================= HERO ================= */}
+        {/* HERO */}
         <section className="bg-gradient-to-br from-pink-50 to-red-100 py-20 text-center">
-          <h1 className="text-4xl lg:text-5xl font-serif font-bold text-gray-800 mb-6">
+          <h1 className="text-4xl lg:text-5xl font-serif font-bold mb-6">
             Our Story
           </h1>
 
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            **MESSIA** was born from the belief that every occasion deserves to be celebrated beautifully.  
-            We curate premium gifts that turn emotions into lasting memories.
+            MESSIA was born from the belief that every occasion deserves to be
+            celebrated beautifully — turning emotions into lasting memories.
           </p>
         </section>
 
-        {/* ================= MISSION ================= */}
+        {/* MISSION */}
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
             
@@ -121,21 +163,19 @@ export default function About() {
                 Our Mission
               </h2>
 
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                Our mission is to make gifting **simple, emotional, and impactful**.
-                Whether it's birthdays, anniversaries, or spontaneous surprises,
-                Messia brings personal connection into every box.
+              <p className="text-gray-600 mb-6">
+                Our mission is to make gifting simple, heartfelt, and effortless.
+                From birthdays to anniversaries, Messia curates premium experiences
+                your loved ones will never forget.
               </p>
 
-              <p className="text-gray-600 mb-8 leading-relaxed">
-                By focusing on premium products, elegant packaging, and on-time
-                delivery, we ensure you can express love effortlessly.
+              <p className="text-gray-600 mb-8">
+                Through quality products, elegant packaging, and on-time delivery,
+                we help you create meaningful moments with ease.
               </p>
 
               <Link href="/products">
-                <Button className="btn-primary px-8 py-3">
-                  Explore Our Gifts
-                </Button>
+                <Button>Explore Our Gifts</Button>
               </Link>
             </div>
 
@@ -152,16 +192,18 @@ export default function About() {
           </div>
         </section>
 
-        {/* ================= VALUES ================= */}
+        {/* VALUES */}
         <section className="py-16 bg-pink-50">
           <div className="max-w-7xl mx-auto px-6 text-center">
 
-            <h2 className="section-title">Our Values</h2>
+            <h2 className="text-3xl font-serif font-bold">
+              Our Values
+            </h2>
 
             <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8 mt-10">
               {values.map((v, i) => (
-                <Card key={i} className="hover:shadow-xl transition">
-                  <CardContent className="p-8">
+                <Card key={i}>
+                  <CardContent>
                     <div className="flex justify-center mb-4">
                       {v.icon}
                     </div>
@@ -177,18 +219,18 @@ export default function About() {
           </div>
         </section>
 
-        {/* ================= TEAM ================= */}
+        {/* TEAM */}
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-6">
 
-            <h2 className="section-title text-center mb-16">
+            <h2 className="text-3xl font-serif font-bold text-center mb-16">
               Meet Our Team
             </h2>
 
             <div className="grid sm:grid-cols-3 gap-8">
               {team.map((m, i) => (
-                <Card key={i} className="text-center hover:shadow-xl transition">
-                  <CardContent className="p-8">
+                <Card key={i} className="text-center">
+                  <CardContent>
                     <img
                       src={m.image}
                       alt={m.name}
@@ -214,18 +256,18 @@ export default function About() {
           </div>
         </section>
 
-        {/* ================= PROCESS ================= */}
+        {/* PROCESS */}
         <section className="py-16 bg-pink-50">
           <div className="max-w-7xl mx-auto px-6 text-center">
 
-            <h2 className="section-title mb-14">
+            <h2 className="text-3xl font-serif font-bold mb-14">
               How We Create Magic
             </h2>
 
             <div className="grid md:grid-cols-4 gap-8">
               {process.map((step, i) => (
                 <div key={i}>
-                  <div className="w-16 h-16 bg-pink-600 text-white rounded-full mx-auto flex items-center justify-center font-bold text-2xl mb-6">
+                  <div className="w-16 h-16 mx-auto bg-pink-600 text-white rounded-full flex items-center justify-center font-bold text-2xl mb-6">
                     {step.step}
                   </div>
 
@@ -243,7 +285,7 @@ export default function About() {
           </div>
         </section>
 
-        {/* ================= CTA ================= */}
+        {/* CTA */}
         <section className="py-20 bg-gradient-to-r from-pink-600 to-red-500 text-white text-center">
 
           <Gift size={44} className="mx-auto mb-4" />
@@ -258,18 +300,11 @@ export default function About() {
 
           <div className="flex justify-center gap-4">
             <Link href="/products">
-              <Button className="bg-white text-pink-600 hover:bg-gray-100 px-8 py-3">
-                Shop Gifts
-              </Button>
+              <Button variant="light">Shop Gifts</Button>
             </Link>
 
             <Link href="/contact">
-              <Button
-                variant="outline"
-                className="border-white text-white hover:bg-white hover:text-pink-600 px-8 py-3"
-              >
-                Contact Us
-              </Button>
+              <Button variant="outline">Contact Us</Button>
             </Link>
           </div>
 
