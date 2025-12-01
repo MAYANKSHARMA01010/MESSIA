@@ -1,10 +1,14 @@
 @import "tailwindcss";
 
+/* -------------------------
+   ROOT THEME VARIABLES
+--------------------------*/
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
+/* Theme tokens */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -12,6 +16,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Dark Mode */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -19,8 +24,94 @@
   }
 }
 
+/* -------------------------
+   BASE STYLES
+--------------------------*/
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* -------------------------
+   NAVBAR & LINKS
+--------------------------*/
+.nav-link {
+  @apply text-gray-700 hover:text-pink-600 transition;
+}
+
+/* -------------------------
+   BUTTON VARIANTS
+--------------------------*/
+.btn-outline {
+  @apply px-4 py-2 text-gray-700 border border-gray-300 rounded-full hover:border-pink-600 hover:text-pink-600 transition;
+}
+
+.btn-primary {
+  @apply px-4 py-2 bg-pink-600 text-white rounded-full hover:bg-pink-700 transition;
+}
+
+.btn-danger {
+  @apply px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition;
+}
+
+/* -------------------------
+   PROFILE SLIDER
+--------------------------*/
+.slider-btn {
+  @apply flex items-center gap-2 w-full px-3 py-2 rounded-lg hover:bg-gray-100 text-sm transition;
+}
+
+/* -------------------------
+   SLIDE DOWN ANIMATION
+--------------------------*/
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 0.18s ease-out forwards;
+}
+
+/* -------------------------
+   SCROLLBAR (OPTIONAL NICE-LOOK)
+--------------------------*/
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* -------------------------
+   SMOOTH UI RESET
+--------------------------*/
+button:focus {
+  outline: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* Smooth tap animation */
+button:active {
+  transform: scale(0.98);
 }

@@ -3,148 +3,168 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Menu, X, User } from "lucide-react";
+import { Menu, X, User, ChevronDown, LogOut } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import ProfileSlider from "./ProfileSlider";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showSlider, setShowSlider] = useState(false);
+
   const router = useRouter();
-  const { isLoggedIn, isAdmin } = useAuth();
+  const { isLoggedIn, isAdmin, user, logout } = useAuth();
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
   const handleNavClick = (path) => {
     router.push(path);
     setIsOpen(false);
+    setShowSlider(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    router.push("/");
+    setShowSlider(false);
   };
 
   return (
     <nav className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md shadow-sm z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+          {/* LOGO */}
           <button
             onClick={() => handleNavClick("/")}
-            className="text-2xl font-semibold tracking-tight text-gray-800 focus:outline-none cursor-pointer"
+            className="text-2xl font-semibold tracking-tight text-gray-800 focus:outline-none"
           >
             Messia<span className="text-pink-600">.</span>
           </button>
 
+          {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link
-              href="/"
-              className="text-gray-700 hover:text-pink-600 transition"
-            >
+            <Link href="/" className="nav-link">
               Home
             </Link>
-            <Link
-              href="/products"
-              className="text-gray-700 hover:text-pink-600 transition"
-            >
+            <Link href="/products" className="nav-link">
               Products
             </Link>
-            <Link
-              href="/about"
-              className="text-gray-700 hover:text-pink-600 transition"
-            >
+            <Link href="/about" className="nav-link">
               About
             </Link>
-            <Link
-              href="/contact"
-              className="text-gray-700 hover:text-pink-600 transition"
-            >
+            <Link href="/contact" className="nav-link">
               Contact
             </Link>
 
-            <div className="flex items-center space-x-3">
-              {isLoggedIn ? (
+            {/* AUTH UI */}
+            {!isLoggedIn ? (
+              <>
                 <button
-                  onClick={() => handleNavClick("/profile")}
-                  className="flex items-center space-x-2 px-4 py-2 text-gray-700 border border-gray-300 rounded-full hover:border-pink-600 hover:text-pink-600 transition"
+                  onClick={() => handleNavClick("/login")}
+                  className="btn-outline"
+                >
+                  Login
+                </button>
+
+                <button
+                  onClick={() => handleNavClick("/register")}
+                  className="btn-primary"
+                >
+                  Register
+                </button>
+              </>
+            ) : (
+              <div className="relative">
+                <button
+                  onClick={() => setShowSlider(!showSlider)}
+                  className="flex items-center gap-2 px-4 py-2 border rounded-full hover:border-pink-500 transition"
                 >
                   <User size={18} />
-                  <span>Profile</span>
+                  <span>{user?.name || "User"}</span>
+                  <ChevronDown size={16} />
                 </button>
-              ) : (
-                <>
-                  <button
-                    onClick={() => handleNavClick("/login")}
-                    className="px-4 py-2 text-gray-700 border border-gray-300 rounded-full hover:border-pink-600 hover:text-pink-600 transition"
-                  >
-                    Login
-                  </button>
-                  <button
-                    onClick={() => handleNavClick("/register")}
-                    className="px-4 py-2 bg-pink-600 text-white rounded-full hover:bg-pink-700 transition"
-                  >
-                    Register
-                  </button>
-                </>
-              )}
-            </div>
+
+                {/* PROFILE SLIDER */}
+                {showSlider && (
+                  <ProfileSlider
+                    isAdmin={isAdmin}
+                    onNav={handleNavClick}
+                    onLogout={handleLogout}
+                  />
+                )}
+              </div>
+            )}
           </div>
 
+          {/* MOBILE BUTTON */}
           <button
             onClick={toggleMenu}
-            className="md:hidden p-2.5 rounded-lg text-gray-800 hover:bg-gray-100 active:scale-95 transition"
+            className="md:hidden p-2 rounded-lg hover:bg-gray-100"
           >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
+            {isOpen ? <X /> : <Menu />}
           </button>
         </div>
       </div>
 
+      {/* MOBILE MENU */}
       {isOpen && (
         <div className="fixed inset-0 bg-black/10 backdrop-blur-sm md:hidden">
-          <div className="bg-white shadow-md absolute top-16 left-0 w-full px-4 pt-2 pb-4 space-y-3">
-            <Link
-              href="/"
-              onClick={() => setIsOpen(false)}
-              className="block text-gray-700 hover:text-pink-600"
-            >
+          <div className="absolute top-16 left-0 w-full bg-white shadow-md p-4 space-y-3">
+
+            <Link onClick={() => setIsOpen(false)} href="/">
               Home
             </Link>
-            <Link
-              href="/products"
-              onClick={() => setIsOpen(false)}
-              className="block text-gray-700 hover:text-pink-600"
-            >
+
+            <Link onClick={() => setIsOpen(false)} href="/products">
               Products
             </Link>
-            <Link
-              href="/about"
-              onClick={() => setIsOpen(false)}
-              className="block text-gray-700 hover:text-pink-600"
-            >
+
+            <Link onClick={() => setIsOpen(false)} href="/about">
               About
             </Link>
-            <Link
-              href="/contact"
-              onClick={() => setIsOpen(false)}
-              className="block text-gray-700 hover:text-pink-600"
-            >
+
+            <Link onClick={() => setIsOpen(false)} href="/contact">
               Contact
             </Link>
 
-            {isLoggedIn ? (
-              <button
-                onClick={() => handleNavClick("/profile")}
-                className="block w-full text-center border border-gray-300 rounded-full py-2 text-gray-700 hover:border-pink-600 hover:text-pink-600 transition"
-              >
-                Profile
-              </button>
-            ) : (
+            {!isLoggedIn ? (
               <>
                 <button
                   onClick={() => handleNavClick("/login")}
-                  className="block w-full text-center border border-gray-300 rounded-full py-2 text-gray-700 hover:border-pink-600 hover:text-pink-600 transition"
+                  className="btn-outline w-full"
                 >
                   Login
                 </button>
+
                 <button
                   onClick={() => handleNavClick("/register")}
-                  className="block w-full text-center bg-pink-600 text-white rounded-full py-2 hover:bg-pink-700 transition"
+                  className="btn-primary w-full"
                 >
                   Register
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => handleNavClick("/profile")}
+                  className="btn-outline w-full"
+                >
+                  Profile
+                </button>
+
+                {isAdmin && (
+                  <button
+                    onClick={() => handleNavClick("/admin")}
+                    className="btn-outline w-full"
+                  >
+                    Admin Panel
+                  </button>
+                )}
+
+                <button
+                  onClick={handleLogout}
+                  className="btn-danger w-full"
+                >
+                  Logout
                 </button>
               </>
             )}
