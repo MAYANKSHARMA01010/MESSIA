@@ -8,11 +8,13 @@ import { ArrowLeft } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
+import { API_BASE_URL } from "../../utils/api";
+
 function Login() {
   const [formData, setFormData] = useState({
     input: "",
     password: "",
-  }); 
+  });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -22,15 +24,11 @@ function Login() {
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const BASE_URL =
-    process.env.NODE_ENV === "production"
-      ? process.env.NEXT_PUBLIC_BACKEND_SERVER_URL
-      : process.env.NEXT_PUBLIC_BACKEND_LOCAL_URL;
-
   const getErrorMessage = (err, fallback = "Login failed ❌") => {
     if (err.response?.data?.ERROR) return err.response.data.ERROR;
     if (err.response?.data?.message) return err.response.data.message;
-    if (err.message?.includes("timeout")) return "Request timed out. Try again.";
+    if (err.message?.includes("timeout"))
+      return "Request timed out. Try again.";
     if (err.request) return "No response from server. Check your network.";
     return fallback;
   };
@@ -58,7 +56,7 @@ function Login() {
     };
 
     try {
-      const res = await axios.post(`${BASE_URL}/api/auth/login`, payload, {
+      const res = await axios.post(`${API_BASE_URL}/auth/login`, payload, {
         headers: { "Content-Type": "application/json" },
         timeout: 8000,
       });
@@ -70,13 +68,11 @@ function Login() {
         toast.success("✅ Login successful! Redirecting...");
         setMessage("✅ Login successful! Redirecting...");
         setTimeout(() => router.push("/profile"), 1200);
-      } 
-      else {
+      } else {
         toast.error("Unexpected response format ❌");
         setMessage("Unexpected response format ❌");
       }
-    } 
-    catch (err) {
+    } catch (err) {
       setLoading(false);
       const errorMessage = getErrorMessage(err);
       console.error("Login error:", err);

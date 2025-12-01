@@ -7,6 +7,8 @@ import { ArrowLeft } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
+import { API_BASE_URL } from "../../utils/api";
+
 function Register() {
   const [formData, setFormData] = useState({
     name: "",
@@ -18,18 +20,14 @@ function Register() {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
- 
-  const router = useRouter();
 
-  const BASE_URL =
-    process.env.NODE_ENV === "production"
-      ? process.env.NEXT_PUBLIC_BACKEND_SERVER_URL
-      : process.env.NEXT_PUBLIC_BACKEND_LOCAL_URL;
+  const router = useRouter();
 
   const getErrorMessage = (err, fallback = "Registration failed ❌") => {
     if (err.response?.data?.ERROR) return err.response.data.ERROR;
     if (err.response?.data?.message) return err.response.data.message;
-    if (err.message?.includes("timeout")) return "Request timed out. Try again.";
+    if (err.message?.includes("timeout"))
+      return "Request timed out. Try again.";
     if (err.request) return "No response from server. Check your network.";
     return fallback;
   };
@@ -58,7 +56,7 @@ function Register() {
     };
 
     try {
-      const res = await axios.post(`${BASE_URL}/api/auth/register`, payload, {
+      const res = await axios.post(`${API_BASE_URL}/auth/register`, payload, {
         headers: { "Content-Type": "application/json" },
         timeout: 8000,
       });
@@ -78,14 +76,12 @@ function Register() {
         });
 
         setTimeout(() => router.push("/login"), 1200);
-      } 
-      else {
+      } else {
         const msg = res.data?.ERROR || "Registration failed ❌";
         toast.error(`❌ ${msg}`);
         setMessage(`❌ ${msg}`);
       }
-    } 
-    catch (err) {
+    } catch (err) {
       const msg = getErrorMessage(err);
       console.error("Register error:", err);
       setLoading(false);

@@ -9,11 +9,11 @@ import { useAuth } from "../context/AuthContext";
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isAdmin } = useAuth();
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
-  const handleNavClick = (path) => { 
+  const handleNavClick = (path) => {
     router.push(path);
     setIsOpen(false);
   };
@@ -38,11 +38,19 @@ function Navbar() {
               Home
             </Link>
             <Link
-              href="/gifts"
+              href="/products"
               className="text-gray-700 hover:text-pink-600 transition"
             >
-              Gifts
+              Products
             </Link>
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className="text-gray-700 hover:text-pink-600 transition"
+              >
+                Admin
+              </Link>
+            )}
             <Link
               href="/about"
               className="text-gray-700 hover:text-pink-600 transition"
@@ -104,12 +112,21 @@ function Navbar() {
               Home
             </Link>
             <Link
-              href="/gifts"
+              href="/products"
               onClick={() => setIsOpen(false)}
               className="block text-gray-700 hover:text-pink-600"
             >
-              Gifts
+              Products
             </Link>
+            {isAdmin && (
+              <Link
+                href="/admin"
+                onClick={() => setIsOpen(false)}
+                className="block text-gray-700 hover:text-pink-600"
+              >
+                Admin
+              </Link>
+            )}
             <Link
               href="/about"
               onClick={() => setIsOpen(false)}

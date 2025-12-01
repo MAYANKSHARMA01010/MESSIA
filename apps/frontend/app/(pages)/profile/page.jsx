@@ -12,11 +12,13 @@ import {
   LogOut,
   ArrowLeft,
   Save,
-  X, 
+  X,
   Edit,
 } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
+
+import { API_BASE_URL } from "../../utils/api";
 
 function ProfilePage() {
   const { token, isLoggedIn, logout } = useAuth();
@@ -32,15 +34,11 @@ function ProfilePage() {
   const [message, setMessage] = useState("");
   const router = useRouter();
 
-  const BASE_URL =
-    process.env.NODE_ENV === "production"
-      ? process.env.NEXT_PUBLIC_BACKEND_SERVER_URL
-      : process.env.NEXT_PUBLIC_BACKEND_LOCAL_URL;
-
   const getErrorMessage = (err, fallback = "Something went wrong ❌") => {
     if (err.response?.data?.ERROR) return err.response.data.ERROR;
     if (err.response?.data?.message) return err.response.data.message;
-    if (err.message?.includes("timeout")) return "Request timed out. Try again.";
+    if (err.message?.includes("timeout"))
+      return "Request timed out. Try again.";
     if (err.request) return "No response from server. Check your network.";
     return fallback;
   };
@@ -57,7 +55,7 @@ function ProfilePage() {
       if (!token) return;
 
       try {
-        const res = await axios.get(`${BASE_URL}/api/auth/me`, {
+        const res = await axios.get(`${API_BASE_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
           timeout: 8000,
         });
@@ -69,13 +67,11 @@ function ProfilePage() {
             username: res.data.user.username || "",
             gender: res.data.user.gender || "",
           });
-        } 
-        else {
+        } else {
           toast.error("Invalid response format ❌");
           setMessage("Invalid response format ❌");
         }
-      } 
-      catch (err) {
+      } catch (err) {
         const msg = getErrorMessage(err, "Error fetching profile");
         console.error("Profile fetch error:", err);
         setMessage(`❌ ${msg}`);
@@ -83,12 +79,10 @@ function ProfilePage() {
           toast.error("Session expired. Please log in again.");
           logout();
           router.push("/login");
-        } 
-        else {
+        } else {
           toast.error(`❌ ${msg}`);
         }
-      } 
-      finally {
+      } finally {
         setLoading(false);
       }
     };
@@ -111,7 +105,7 @@ function ProfilePage() {
     setMessage("");
 
     try {
-      const res = await axios.put(`${BASE_URL}/api/auth/update`, formData, {
+      const res = await axios.put(`${API_BASE_URL}/auth/update`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -124,20 +118,17 @@ function ProfilePage() {
         setEditing(false);
         toast.success("✅ Profile updated successfully!");
         setMessage("✅ Profile updated successfully!");
-      } 
-      else {
+      } else {
         const msg = res.data?.ERROR || "Failed to update profile ❌";
         toast.error(msg);
         setMessage(`❌ ${msg}`);
       }
-    } 
-    catch (err) {
+    } catch (err) {
       const msg = getErrorMessage(err, "Error updating profile");
       console.error("Update error:", err);
       toast.error(`❌ ${msg}`);
       setMessage(`❌ ${msg}`);
-    } 
-    finally {
+    } finally {
       setSaving(false);
     }
   };
@@ -196,9 +187,7 @@ function ProfilePage() {
         </div>
 
         <div className="pt-16 pb-10 px-8 text-center">
-          <h2 className="text-3xl font-semibold text-gray-800">
-            {user.name}
-          </h2>
+          <h2 className="text-3xl font-semibold text-gray-800">{user.name}</h2>
           <p className="text-gray-500 mt-1">@{user.username}</p>
 
           <p className="mt-4 text-sm text-gray-500 italic">
