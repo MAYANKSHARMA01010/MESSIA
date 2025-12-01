@@ -2,6 +2,7 @@ const express = require("express");
 const corsMiddleware = require("./config/cors.js");
 const authRouter = require("./routes/authRoute.js");
 const productRouter = require("./routes/productRoute.js");
+const cartRouter = require("./routes/cartRoute.js");
 require("dotenv").config();
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(express.json());
 
 app.use("/api/auth", authRouter);
 app.use("/api/products", productRouter);
+app.use("/api/cart", cartRouter);
 
 app.get("/", (req, res) => {
   res.status(200).send("<h1>Backend Running Successfully 🚀</h1>");

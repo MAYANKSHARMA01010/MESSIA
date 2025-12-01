@@ -10,7 +10,7 @@ const {
 } = require("../controllers/productController");
 
 const { authenticate } = require("../utils/auth");
-const { verifyAdmin } = require("../middlewares/adminMiddleware");
+const { verifyAdmin } = require("../middlewares/adminMiddleware"); 
 const { validateProduct } = require("../middlewares/productMiddleware");
 
 // Public Routes
