@@ -12,14 +12,20 @@ import {
   CreditCard,
   HelpCircle,
   Trash2,
+  Sun,
+  Moon,
 } from "lucide-react";
+import { useTheme } from "next-themes";
+
 const comingSoon = (feature) =>
   toast("🚧 " + feature + " coming soon!", {
     duration: 2500,
   });
+
 const ProfileSlider = ({ isAdmin, onNav, onLogout }) => {
+  const { theme, setTheme } = useTheme();
   return (
-    <div className="absolute right-0 mt-3 w-60 bg-white border shadow-xl rounded-xl p-2 space-y-1 animate-slideDown">
+    <div className="absolute right-0 mt-3 w-60 bg-[var(--surface)] border border-[var(--border)] shadow-xl rounded-xl p-2 space-y-1 animate-slideDown z-50">
       {}
       <p className="px-3 py-1 text-xs text-gray-400 uppercase tracking-wide">
         Account
@@ -37,7 +43,7 @@ const ProfileSlider = ({ isAdmin, onNav, onLogout }) => {
       <SliderButton
         icon={<Heart size={16} />}
         label="Wishlist"
-        onClick={() => onNav("/wishlist")}
+        onClick={() => comingSoon("Wishlist")}
       />
       <SliderButton
         icon={<ShoppingCart size={16} />}
@@ -64,6 +70,22 @@ const ProfileSlider = ({ isAdmin, onNav, onLogout }) => {
       <p className="px-3 py-1 text-xs text-gray-400 uppercase tracking-wide">
         Settings
       </p>
+      <div className="px-3 py-2 flex items-center justify-between">
+        <div className="flex items-center gap-2 text-sm">
+          {theme === "dark" ? <Moon size={16} /> : <Sun size={16} />}
+          <span>Theme</span>
+        </div>
+        <button
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 dark:bg-gray-700 transition-colors focus:outline-none"
+        >
+          <span
+            className={`${
+              theme === "dark" ? "translate-x-6" : "translate-x-1"
+            } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+          />
+        </button>
+      </div>
       <SliderButton
         icon={<Bell size={16} />}
         label="Notifications"
@@ -114,13 +136,13 @@ const SliderButton = ({ icon, label, onClick, danger, dangerOutline }) => {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition
+      className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition font-medium
         ${
           danger
-            ? "text-red-500 hover:bg-red-50"
+            ? "text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
             : dangerOutline
-            ? "text-red-500 border border-red-300 hover:bg-red-50"
-            : "hover:bg-gray-100"
+            ? "text-red-500 border border-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
+            : "text-[var(--foreground)] hover:bg-gray-100 dark:hover:bg-[var(--surface-alt)]"
         }
       `}
     >

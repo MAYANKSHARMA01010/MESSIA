@@ -11,7 +11,7 @@ function Register() {
   const router = useRouter();
   useEffect(() => {
     if (isLoggedIn) {
-      router.replace("/"); 
+      router.replace("/");
     }
   }, [isLoggedIn, router]);
   const [formData, setFormData] = useState({
@@ -78,21 +78,33 @@ function Register() {
     }
   };
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-pink-100 via-white to-pink-50 px-4 relative">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[var(--background)] px-4 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-5"></div>
+      <div className="absolute inset-0 bg-gradient-to-tl from-[var(--primary-light)]/10 via-transparent to-[var(--accent)]/5"></div>
+
       <button
         onClick={() => router.push("/")}
-        className="absolute top-6 left-6 flex items-center gap-2 text-gray-700 hover:text-pink-600 transition"
+        className="absolute top-8 left-8 flex items-center gap-2 text-[var(--foreground)] hover:text-[var(--primary)] transition-colors z-10"
       >
         <ArrowLeft size={20} />
         <span className="font-medium">Back to Home</span>
       </button>
-      <div className="w-full max-w-md bg-white/90 backdrop-blur-lg p-8 rounded-2xl shadow-lg border border-pink-100">
-        <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
-          Create your <span className="text-pink-600">Messia</span> account
-        </h2>
+
+      <div className="w-full max-w-md glass-panel p-10 rounded-3xl shadow-2xl relative z-10 animate-scale-in my-10">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-serif font-bold text-[var(--foreground)] mb-2">
+            Create Account
+          </h2>
+          <p className="text-gray-500 dark:text-gray-400">
+            Join{" "}
+            <span className="text-[var(--primary)] font-medium">Messia</span>{" "}
+            today
+          </p>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-gray-700 font-medium mb-1">
+            <label className="block text-[var(--foreground)] font-medium mb-2 ml-1">
               Full Name
             </label>
             <input
@@ -102,11 +114,11 @@ function Register() {
               value={formData.name}
               onChange={handleChange}
               placeholder="John Doe"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 focus:ring-2 focus:ring-pink-500 outline-none transition-all"
+              className="w-full px-5 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface-alt)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)] focus:border-[var(--primary)] transition-all shadow-sm"
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-medium mb-1">
+            <label className="block text-[var(--foreground)] font-medium mb-2 ml-1">
               Username
             </label>
             <input
@@ -116,11 +128,11 @@ function Register() {
               value={formData.username}
               onChange={handleChange}
               placeholder="john_doe"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 focus:ring-2 focus:ring-pink-500 outline-none transition-all"
+              className="w-full px-5 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface-alt)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)] focus:border-[var(--primary)] transition-all shadow-sm"
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-medium mb-1">
+            <label className="block text-[var(--foreground)] font-medium mb-2 ml-1">
               Email
             </label>
             <input
@@ -130,11 +142,11 @@ function Register() {
               value={formData.email}
               onChange={handleChange}
               placeholder="you@example.com"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 focus:ring-2 focus:ring-pink-500 outline-none transition-all"
+              className="w-full px-5 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface-alt)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)] focus:border-[var(--primary)] transition-all shadow-sm"
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-medium mb-1">
+            <label className="block text-[var(--foreground)] font-medium mb-2 ml-1">
               Password
             </label>
             <input
@@ -144,11 +156,11 @@ function Register() {
               value={formData.password}
               onChange={handleChange}
               placeholder="••••••••"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 focus:ring-2 focus:ring-pink-500 outline-none transition-all"
+              className="w-full px-5 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface-alt)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)] focus:border-[var(--primary)] transition-all shadow-sm"
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-medium mb-1">
+            <label className="block text-[var(--foreground)] font-medium mb-2 ml-1">
               Confirm Password
             </label>
             <input
@@ -158,31 +170,31 @@ function Register() {
               value={formData.confirm_password}
               onChange={handleChange}
               placeholder="••••••••"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 focus:ring-2 focus:ring-pink-500 outline-none transition-all"
+              className="w-full px-5 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface-alt)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)] focus:border-[var(--primary)] transition-all shadow-sm"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-pink-600 hover:bg-pink-700 active:bg-pink-800 text-white font-medium py-2.5 rounded-lg transition-all duration-200 disabled:opacity-60"
+            className="w-full btn-primary py-3.5 text-lg shadow-lg hover:shadow-glow disabled:opacity-70 disabled:cursor-not-allowed mt-2"
           >
             {loading ? "Creating Account..." : "Sign Up"}
           </button>
         </form>
         {message && (
           <p
-            className={`text-center mt-4 text-sm ${
+            className={`text-center mt-6 text-sm font-medium ${
               message.includes("✅") ? "text-green-600" : "text-red-600"
             }`}
           >
             {message}
           </p>
         )}
-        <p className="text-center text-gray-600 text-sm mt-6">
+        <p className="text-center text-gray-500 dark:text-gray-400 text-sm mt-8">
           Already have an account?{" "}
           <Link
             href="/login"
-            className="text-pink-600 font-medium hover:underline"
+            className="text-[var(--primary)] font-medium hover:underline hover:text-[var(--primary-dark)] transition-colors"
           >
             Login
           </Link>

@@ -7,7 +7,7 @@ import { productAPI, categoryAPI } from "../../utils/api";
 import ProductCard from "../../components/Products/ProductCard";
 import ProductDetailsModal from "../../components/Products/ProductDetailsModal";
 import FilterBar from "../../components/Products/FilterBar";
-import Navbar from "@/app/components/Navbar";
+
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -47,7 +47,7 @@ export default function ProductsPage() {
       }
       const params = {
         page: currentPage,
-        limit: 12, 
+        limit: 12,
         search: searchQuery,
         sortBy: sortField,
         order,
@@ -120,27 +120,29 @@ export default function ProductsPage() {
   };
   return (
     <>
-      <Navbar />
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-        <div className="bg-white dark:bg-gray-900 pt-24 pb-12 px-4 sm:px-6 lg:px-8 text-center border-b border-gray-100 dark:border-gray-800">
-          <h1 className="text-4xl font-serif font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white mb-4">
-            The Collection
-          </h1>
-          <p className="max-w-2xl mx-auto text-lg text-gray-500 dark:text-gray-400">
-            Discover our handcrafted selection of premium candles and
-            accessories, designed to elevate your space.
-          </p>
-          {isAdmin && (
-            <div className="mt-8">
-              <Link
-                href="/admin/products/new"
-                className="inline-flex items-center gap-2 rounded-full bg-gray-900 px-6 py-3 text-white hover:bg-pink-600 transition-all shadow-lg hover:shadow-pink-600/20"
-              >
-                <Plus size={20} />
-                Add New Product
-              </Link>
-            </div>
-          )}
+      <div className="min-h-screen bg-[var(--background)] no-scrollbar">
+        <div className="bg-[var(--surface)] pt-28 pb-16 px-4 sm:px-6 lg:px-8 text-center border-b border-[var(--border)] relative overflow-hidden">
+          <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-5"></div>
+          <div className="relative z-10">
+            <h1 className="text-5xl md:text-6xl font-serif font-bold tracking-tight text-[var(--foreground)] mb-6 animate-fade-in">
+              The Collection
+            </h1>
+            <p className="max-w-2xl mx-auto text-xl text-gray-500 dark:text-gray-400 font-light leading-relaxed animate-slide-up">
+              Discover our handcrafted selection of premium candles and
+              accessories, designed to elevate your space.
+            </p>
+            {isAdmin && (
+              <div className="mt-10 animate-scale-in">
+                <Link
+                  href="/admin/products/new"
+                  className="inline-flex items-center gap-2 rounded-full bg-[var(--foreground)] px-8 py-3 text-[var(--background)] hover:bg-[var(--primary)] transition-all shadow-lg hover:shadow-glow"
+                >
+                  <Plus size={20} />
+                  Add New Product
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
         <FilterBar
           searchQuery={searchQuery}
@@ -151,16 +153,16 @@ export default function ProductsPage() {
           setSelectedCategory={setSelectedCategory}
           categories={categories}
         />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           {products.length === 0 && !loading ? (
-            <div className="text-center py-20">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4 dark:bg-gray-800">
-                <Search size={24} className="text-gray-400" />
+            <div className="text-center py-24 animate-fade-in">
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-[var(--surface-alt)] mb-6 shadow-inner">
+                <Search size={32} className="text-gray-400" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+              <h3 className="text-2xl font-serif font-medium text-[var(--foreground)]">
                 No products found
               </h3>
-              <p className="mt-2 text-gray-500 dark:text-gray-400">
+              <p className="mt-3 text-gray-500 dark:text-gray-400 max-w-md mx-auto">
                 Try adjusting your search or filters to find what you're looking
                 for.
               </p>
@@ -169,18 +171,19 @@ export default function ProductsPage() {
                   setSearchQuery("");
                   setSelectedCategory("all");
                 }}
-                className="mt-6 text-pink-600 hover:text-pink-700 font-medium"
+                className="mt-8 text-[var(--primary)] hover:text-[var(--primary-dark)] font-medium hover:underline transition-all"
               >
                 Clear all filters
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-              {products.map((product) => (
+            <div className="grid grid-cols-1 gap-y-12 gap-x-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {products.map((product, idx) => (
                 <ProductCard
                   key={product.id}
                   product={product}
                   onClick={handleProductClick}
+                  style={{ animationDelay: `${idx * 50}ms` }}
                 />
               ))}
             </div>
@@ -188,13 +191,13 @@ export default function ProductsPage() {
           {}
           <div
             id="product-sentinel"
-            className="h-20 flex justify-center items-center mt-8"
+            className="h-24 flex justify-center items-center mt-12"
           >
             {loading && (
-              <Loader2 className="h-8 w-8 animate-spin text-pink-600" />
+              <Loader2 className="h-10 w-10 animate-spin text-[var(--primary)]" />
             )}
             {!hasMore && products.length > 0 && (
-              <p className="text-gray-500 dark:text-gray-400">
+              <p className="text-gray-400 dark:text-gray-500 font-light italic">
                 You've reached the end of the collection.
               </p>
             )}

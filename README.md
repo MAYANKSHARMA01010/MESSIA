@@ -1,67 +1,155 @@
-# 🧠 MESSIA
-**Transforming Ideas into Limitless Possibilities**
+# MESSIA - Premium E-Commerce Application
 
-![Last Commit](https://img.shields.io/badge/last%20commit-today-blue)
-![Language](https://img.shields.io/badge/javascript-99.0%25-yellow)
-![Languages](https://img.shields.io/badge/languages-2-green)
+MESSIA is a full-stack e-commerce platform designed for gifting premium products. It features a modern, responsive frontend built with Next.js and a robust backend powered by Node.js, Express, and PostgreSQL.
 
-Built with the tools and technologies:
-> Express | JSON | Markdown | npm | Autoprefixer | PostCSS | .ENV | JavaScript | Nodemon | React | Prisma | ESLint | Axios
+## 🚀 Tech Stack
 
----
+### Frontend
 
-## 📋 Table of Contents
-- [Overview](#overview)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Usage](#usage)
-  - [Testing](#testing)
-- [Features](#features)
-- [Project Structure](#project-structure)
-- [Roadmap](#roadmap)
-- [Contribution](#contribution)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
+- **Library**: [React 19](https://react.dev/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **State Management**: Context API (Auth, Cart)
+- **Notifications**: React Hot Toast
 
----
+### Backend
 
-## 🧩 Overview
-MESSIA is a full-stack developer toolkit that simplifies the process of building scalable, secure web applications with a clear separation of frontend and backend components. It provides a robust foundation for rapid development, deployment, and future expansion.
+- **Runtime**: [Node.js](https://nodejs.org/)
+- **Framework**: [Express.js](https://expressjs.com/)
+- **Database**: [PostgreSQL](https://www.postgresql.org/)
+- **ORM**: [Prisma](https://www.prisma.io/)
+- **Authentication**: JWT (JSON Web Tokens) & Bcrypt
 
-### 💡 Why MESSIA?
-This project aims to streamline full-stack development by integrating essential features into a cohesive architecture.  
-The core features include:
+## 📂 Project Structure
 
-- 🛠️ **Authentication**: Middleware and JWT utilities ensure secure user management and session handling.
-- 🚀 **Modular Architecture**: Clear separation of frontend (Next.js, Tailwind CSS) and backend (Express, Prisma) components for scalable development.
-- ⚙️ **Configurable Environment**: Environment variables facilitate seamless deployment across development, staging, and production.
-- 🧰 **Developer-Friendly Tools**: Path aliasing, ESLint, and build configurations optimize developer experience.
-- 🗃️ **Database Schema**: Prisma models provide a solid foundation for data integrity and future features.
-- ⚡ **Flexible Setup**: Custom configurations for build, runtime, and deployment streamline project management.
+```
+.
+├── README.md
+├── apps
+│   ├── backend                 # Express.js Backend
+│   │   ├── config              # Database & CORS config
+│   │   ├── controllers         # Route controllers (Auth, Product, Cart, etc.)
+│   │   ├── middlewares         # Auth & Admin middlewares
+│   │   ├── models              # Prisma models
+│   │   ├── prisma              # Prisma schema & migrations
+│   │   ├── routes              # API routes
+│   │   └── utils               # Helper functions
+│   └── frontend                # Next.js Frontend
+│       ├── app                 # App Router
+│       │   ├── (pages)         # Application pages
+│       │   ├── components      # Reusable UI components
+│       │   ├── context         # React Context (Auth, Cart)
+│       │   ├── globals.css     # Global styles & Tailwind
+│       │   └── layout.js       # Root layout
+│       └── public              # Static assets
+└── package.json
+```
 
----
+## 🛠️ Prerequisites
 
-## 🚀 Getting Started
+- **Node.js** (v18 or higher)
+- **npm** or **yarn**
+- **PostgreSQL** database
 
-### Prerequisites
-This project requires the following dependencies:
-- **Programming Language:** JavaScript  
-- **Package Manager:** npm  
+## ⚙️ Installation & Setup
 
-Ensure you have **Node.js (v18+)** and **npm** installed.
-
----
-
-### Installation
-Run **MESSIA** from the source and install dependencies.
+### 1. Clone the Repository
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/MAYANKSHARMA01018/MESSIA
+git clone <repository-url>
+cd messia
+```
 
-# 2. Navigate to the project directory
-cd MESSIA
+### 2. Backend Setup
 
-# 3. Install the dependencies
+Navigate to the backend directory and install dependencies:
+
+```bash
+cd apps/backend
 npm install
+```
+
+Create a `.env` file in `apps/backend` with the following variables:
+
+```env
+PORT=4000
+DATABASE_URL="postgresql://user:password@localhost:5432/messia_db?schema=public"
+JWT_SECRET="your_super_secret_key"
+```
+
+Run database migrations:
+
+```bash
+npx prisma migrate dev --name init
+```
+
+Start the backend server:
+
+```bash
+npm run dev
+```
+
+The backend will run on `http://localhost:4000`.
+
+### 3. Frontend Setup
+
+Navigate to the frontend directory and install dependencies:
+
+```bash
+cd ../frontend
+npm install
+```
+
+Create a `.env.local` file in `apps/frontend` (optional, if needed for API URL):
+
+```env
+NEXT_PUBLIC_API_URL="http://localhost:4000/api"
+```
+
+Start the frontend development server:
+
+```bash
+npm run dev
+```
+
+The frontend will run on `http://localhost:3000`.
+
+## 🌟 Features
+
+- **User Authentication**: Sign up, Login, and Profile management.
+- **Product Management**: Admin dashboard to add, edit, and delete products.
+- **Shopping Cart**: Add items, adjust quantities, and view cart summary.
+- **Address Book**: Manage shipping addresses with a premium UI.
+- **Responsive Design**: Fully optimized for mobile and desktop devices.
+- **Dark Mode**: Built-in dark mode support.
+
+## 📝 API Endpoints
+
+### Auth
+
+- `POST /api/auth/register` - Register a new user
+- `POST /api/auth/login` - Login user
+- `GET /api/auth/profile` - Get user profile
+
+### Products
+
+- `GET /api/products` - List all products
+- `GET /api/products/:id` - Get single product
+- `POST /api/products` - Create product (Admin only)
+- `PUT /api/products/:id` - Update product (Admin only)
+- `DELETE /api/products/:id` - Delete product (Admin only)
+
+### Cart
+
+- `GET /api/cart` - Get user cart
+- `POST /api/cart/add` - Add item to cart
+- `PUT /api/cart/update` - Update item quantity
+- `DELETE /api/cart/remove/:productId` - Remove item from cart
+
+### Address
+
+- `GET /api/address` - List addresses
+- `POST /api/address` - Add new address
+- `PUT /api/address/:id` - Update address
+- `DELETE /api/address/:id` - Delete address

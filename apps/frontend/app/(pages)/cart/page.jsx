@@ -2,8 +2,6 @@
 import Image from "next/image";
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
-import Footer from "@/app/components/Footer";
-import Navbar from "@/app/components/Navbar";
 
 export default function CartPage() {
   const {
@@ -19,46 +17,47 @@ export default function CartPage() {
   if (!cart.length)
     return (
       <>
-        <Navbar />
         <div className="min-h-[60vh] flex flex-col items-center justify-center text-center gap-4">
-          <ShoppingBag size={48} className="text-gray-300" />
+          <ShoppingBag size={48} className="text-gray-300 dark:text-gray-600" />
           <h2 className="text-2xl font-semibold">Your cart is empty</h2>
-          <p className="text-gray-500">Add some products to start shopping.</p>
+          <p className="text-gray-500 dark:text-gray-400">
+            Add some products to start shopping.
+          </p>
         </div>
-        <Footer />
       </>
     );
 
   return (
     <>
-      <Navbar />
-
-      <div className="max-w-6xl mx-auto px-4 py-12 space-y-10">
-        <div className="flex flex-col sm:flex-row justify-between gap-4">
+      <div className="max-w-6xl mx-auto px-4 py-24 space-y-10 min-h-screen">
+        <div className="flex flex-col sm:flex-row justify-between gap-4 items-end border-b border-[var(--border)] pb-6">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Shopping Cart</h1>
-            <p className="text-gray-500 mt-1">
-              {totalItems} item{totalItems > 1 && "s"}
+            <h1 className="text-4xl font-serif font-bold tracking-tight text-[var(--foreground)]">
+              Shopping Cart
+            </h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-2 text-lg">
+              {totalItems} item{totalItems > 1 && "s"} in your bag
             </p>
           </div>
 
           <button
             onClick={clearCart}
-            className="flex items-center gap-2 text-sm text-red-600 hover:text-red-700"
+            className="flex items-center gap-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 px-4 py-2 rounded-full transition-all"
           >
             <Trash2 size={16} />
             Clear Cart
           </button>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-10">
+        <div className="grid md:grid-cols-3 gap-12">
           <div className="md:col-span-2 space-y-6">
-            {cart.map((item) => (
+            {cart.map((item, idx) => (
               <div
                 key={item.id}
-                className="flex gap-4 rounded-2xl border p-4 bg-white shadow-sm"
+                className="flex gap-6 p-6 rounded-3xl bg-[var(--surface)] border border-[var(--border)] shadow-sm hover:shadow-md transition-all animate-slide-up"
+                style={{ animationDelay: `${idx * 100}ms` }}
               >
-                <div className="relative w-[100px] min-w-[100px] h-[130px] rounded-xl overflow-hidden bg-gray-100">
+                <div className="relative w-[120px] min-w-[120px] h-[150px] rounded-2xl overflow-hidden bg-[var(--surface-alt)] shadow-inner">
                   <Image
                     src={
                       item.image ||
@@ -66,40 +65,50 @@ export default function CartPage() {
                     }
                     alt={item.name}
                     fill
-                    sizes="100px"
-                    className="object-cover"
+                    sizes="120px"
+                    className="object-cover hover:scale-110 transition-transform duration-500"
                   />
                 </div>
 
-                <div className="flex-1 flex flex-col justify-between gap-3">
+                <div className="flex-1 flex flex-col justify-between py-1">
                   <div>
-                    <h3 className="font-medium leading-tight">{item.name}</h3>
-                    <p className="text-gray-500 text-sm mt-1">₹{item.price}</p>
+                    <h3 className="font-serif font-bold text-xl text-[var(--foreground)] leading-tight">
+                      {item.name}
+                    </h3>
+                    <p className="text-[var(--primary)] font-medium mt-1">
+                      ₹{item.price}
+                    </p>
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3 bg-gray-100 px-3 py-1.5 rounded-lg">
-                      <button onClick={() => decreaseQty(item.productId)}>
-                        <Minus size={18} />
+                  <div className="flex items-center justify-between mt-4">
+                    <div className="flex items-center gap-4 bg-[var(--surface-alt)] px-4 py-2 rounded-full border border-[var(--border)]">
+                      <button
+                        onClick={() => decreaseQty(item.productId)}
+                        className="hover:text-[var(--primary)] transition-colors"
+                      >
+                        <Minus size={16} />
                       </button>
 
-                      <span className="font-semibold min-w-[24px] text-center">
+                      <span className="font-bold min-w-[20px] text-center text-[var(--foreground)]">
                         {item.quantity}
                       </span>
 
-                      <button onClick={() => increaseQty(item.productId)}>
-                        <Plus size={18} />
+                      <button
+                        onClick={() => increaseQty(item.productId)}
+                        className="hover:text-[var(--primary)] transition-colors"
+                      >
+                        <Plus size={16} />
                       </button>
                     </div>
 
                     <div className="text-right space-y-1">
-                      <p className="font-semibold">
+                      <p className="font-bold text-lg text-[var(--foreground)]">
                         ₹{(item.price * item.quantity).toFixed(2)}
                       </p>
 
                       <button
                         onClick={() => removeFromCart(item.productId)}
-                        className="flex gap-1 items-center text-xs text-red-600 hover:text-red-700 ml-auto"
+                        className="flex gap-1 items-center text-xs text-red-500 hover:text-red-700 ml-auto transition-colors"
                       >
                         <Trash2 size={14} />
                         Remove
@@ -111,40 +120,39 @@ export default function CartPage() {
             ))}
           </div>
 
-          <div className="rounded-2xl border p-6 bg-gray-50 h-fit space-y-6">
-            <h2 className="text-xl font-bold">Order Summary</h2>
+          <div className="glass-panel rounded-3xl p-8 h-fit space-y-8 sticky top-24">
+            <h2 className="text-2xl font-serif font-bold text-[var(--foreground)]">
+              Order Summary
+            </h2>
 
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <p>Total items</p>
-                <p>{totalItems}</p>
-              </div>
-
+            <div className="space-y-4 text-gray-600 dark:text-gray-300">
               <div className="flex justify-between">
                 <p>Subtotal</p>
-                <p>₹{totalPrice.toFixed(2)}</p>
+                <p className="font-medium">₹{totalPrice.toFixed(2)}</p>
               </div>
 
               <div className="flex justify-between">
                 <p>Shipping</p>
-                <p className="text-green-600">Free</p>
+                <p className="text-green-600 font-medium">Free</p>
               </div>
 
-              <div className="border-t pt-2 flex justify-between font-semibold text-lg">
+              <div className="border-t border-[var(--border)] pt-4 flex justify-between font-bold text-xl text-[var(--foreground)]">
                 <p>Total</p>
                 <p>₹{totalPrice.toFixed(2)}</p>
               </div>
             </div>
 
-            <button className="w-full bg-gray-900 text-white py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-pink-600 transition">
-              <ShoppingBag size={18} />
+            <button className="w-full btn-primary py-4 text-lg flex items-center justify-center gap-2 shadow-lg hover:shadow-glow">
+              <ShoppingBag size={20} />
               Proceed to Checkout
             </button>
+
+            <p className="text-xs text-center text-gray-400">
+              Secure Checkout • Free Returns
+            </p>
           </div>
         </div>
       </div>
-
-      <Footer />
     </>
   );
 }
