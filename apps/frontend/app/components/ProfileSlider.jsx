@@ -22,23 +22,42 @@ const comingSoon = (feature) =>
 const ProfileSlider = ({ isAdmin, onNav, onLogout }) => {
   return (
     <div className="absolute right-0 mt-3 w-60 bg-white border shadow-xl rounded-xl p-2 space-y-1 animate-slideDown">
-
       {/* ACCOUNT */}
       <p className="px-3 py-1 text-xs text-gray-400 uppercase tracking-wide">
         Account
       </p>
 
-      <SliderButton icon={<User size={16} />} label="Profile" onClick={() => onNav("/profile")} />
-      <SliderButton icon={<ShoppingBag size={16} />} label="My Orders" onClick={() => comingSoon("Orders")} />
-      <SliderButton icon={<Heart size={16} />} label="Wishlist" onClick={() => onNav("/wishlist")} />
-      <SliderButton icon={<ShoppingCart size={16} />} label="My Cart" onClick={() => onNav("/cart")} />
-      <SliderButton icon={<MapPin size={16} />} label="Manage Addresses" onClick={() => onNav("/addresses")} />
+      <SliderButton
+        icon={<User size={16} />}
+        label="Profile"
+        onClick={() => onNav("/profile")}
+      />
+      <SliderButton
+        icon={<ShoppingBag size={16} />}
+        label="My Orders"
+        onClick={() => comingSoon("Orders")}
+      />
+      <SliderButton
+        icon={<Heart size={16} />}
+        label="Wishlist"
+        onClick={() => onNav("/wishlist")}
+      />
+      <SliderButton
+        icon={<ShoppingCart size={16} />}
+        label="My Cart"
+        onClick={() => onNav("/cart")}
+      />
+      <SliderButton
+        icon={<MapPin size={16} />}
+        label="Manage Addresses"
+        onClick={() => onNav("/addresses")}
+      />
 
       <hr />
 
       {/* PAYMENTS */}
-      <p className="px-3 py-1 text-xs text-gray-400 uppercase tracking-wide">1``
-        Payments
+      <p className="px-3 py-1 text-xs text-gray-400 uppercase tracking-wide">
+        1`` Payments
       </p>
 
       <SliderButton
@@ -104,13 +123,7 @@ const ProfileSlider = ({ isAdmin, onNav, onLogout }) => {
 /* -------------------------------------------------------
    INLINE BUTTON — SINGLE FILE ONLY
 --------------------------------------------------------*/
-const SliderButton = ({
-  icon,
-  label,
-  onClick,
-  danger,
-  dangerOutline,
-}) => {
+const SliderButton = ({ icon, label, onClick, danger, dangerOutline }) => {
   return (
     <button
       onClick={onClick}

@@ -104,3 +104,19 @@ button:active {
 .product-card {
   @apply text-left bg-white rounded-2xl shadow-sm hover:shadow-lg transition hover:scale-105 overflow-hidden p-3;
 }
+
+.input {
+  @apply w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:outline-none focus:border-indigo-500 text-sm;
+}
+
+.btn-primary {
+  @apply flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-lg font-medium;
+}
+
+.btn-secondary {
+  @apply flex items-center gap-2 bg-zinc-700 px-5 py-2 rounded-lg;
+}
+
+.icon-btn {
+  @apply p-2 rounded-lg hover:bg-zinc-800 text-zinc-300 hover:text-white;
+}
