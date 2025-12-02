@@ -3,20 +3,13 @@ export const initialCartState = {
   totalItems: 0,
   totalPrice: 0,
 };
-
 export const cartReducer = (state, action) => {
   switch (action.type) {
-
-    /* ---------------------------------
-        ADD ITEM (LOCAL UPDATE)
-    ----------------------------------*/
     case "ADD_TO_CART": {
       const existing = state.items.find(
-        (i) => i.productId === action.payload.productId   // ✅ FIX
+        (i) => i.productId === action.payload.productId   
       );
-
       let updatedItems;
-
       if (existing) {
         updatedItems = state.items.map((i) =>
           i.productId === action.payload.productId
@@ -29,26 +22,16 @@ export const cartReducer = (state, action) => {
           { ...action.payload, quantity: 1 },
         ];
       }
-
       return recalc({ ...state, items: updatedItems });
     }
-
-    /* ---------------------------------
-        INCREASE QTY
-    ----------------------------------*/
     case "INCREASE_QTY": {
       const updatedItems = state.items.map((i) =>
         i.productId === action.payload
           ? { ...i, quantity: i.quantity + 1 }
           : i
       );
-
       return recalc({ ...state, items: updatedItems });
     }
-
-    /* ---------------------------------
-        DECREASE QTY
-    ----------------------------------*/
     case "DECREASE_QTY": {
       const updatedItems = state.items
         .map((i) =>
@@ -58,52 +41,33 @@ export const cartReducer = (state, action) => {
         )
         .filter(Boolean)
         .filter((i) => i.quantity > 0);
-
       return recalc({ ...state, items: updatedItems });
     }
-
-    /* ---------------------------------
-        REMOVE ITEM
-    ----------------------------------*/
     case "REMOVE_FROM_CART": {
       const updatedItems = state.items.filter(
         (i) => i.productId !== action.payload
       );
-
       return recalc({ ...state, items: updatedItems });
     }
-
-    /* ---------------------------------
-        BACKEND SYNC
-    ----------------------------------*/
     case "SET_CART":
       return {
         items: action.payload.items || [],
         totalItems: action.payload.totalItems || 0,
         totalPrice: action.payload.totalPrice || 0,
       };
-
     case "CLEAR_CART":
       return initialCartState;
-
     default:
       return state;
   }
 };
-
-/* ================================
-    TOTALS CALCULATOR
-================================ */
-
 const recalc = (state) => {
   let totalItems = 0;
   let totalPrice = 0;
-
   state.items.forEach((i) => {
     totalItems += i.quantity;
     totalPrice += i.quantity * i.price;
   });
-
   return {
     ...state,
     totalItems,

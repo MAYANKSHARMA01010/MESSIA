@@ -1,42 +1,31 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { Loader2, Plus, Search } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "../../context/AuthContext";
 import { productAPI, categoryAPI } from "../../utils/api";
-
 import ProductCard from "../../components/Products/ProductCard";
 import ProductDetailsModal from "../../components/Products/ProductDetailsModal";
 import FilterBar from "../../components/Products/FilterBar";
 import Navbar from "@/app/components/Navbar";
-
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
-
   const { isAdmin } = useAuth();
-
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("newest");
   const [selectedCategory, setSelectedCategory] = useState("all");
-
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  /* ================= FETCH DATA ================= */
-
   const fetchProducts = async (currentPage, shouldReset = false) => {
     if (loading) return;
     setLoading(true);
-
     try {
       let sortField = "createdAt";
       let order = "desc";
-
       switch (sortBy) {
         case "price_asc":
           sortField = "price";
@@ -56,20 +45,17 @@ export default function ProductsPage() {
           order = "desc";
           break;
       }
-
       const params = {
         page: currentPage,
-        limit: 12, // Load 12 at a time for grid layout
+        limit: 12, 
         search: searchQuery,
         sortBy: sortField,
         order,
         categoryId: selectedCategory !== "all" ? selectedCategory : undefined,
         showHidden: isAdmin ? "true" : undefined,
       };
-
       const res = await productAPI.list(params);
       const newProducts = res.data.products;
-
       if (shouldReset) {
         setProducts(newProducts);
       } else {
@@ -81,7 +67,6 @@ export default function ProductsPage() {
           return [...prev, ...uniqueNew];
         });
       }
-
       setHasMore(newProducts.length === 12);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -89,7 +74,6 @@ export default function ProductsPage() {
       setLoading(false);
     }
   };
-
   const fetchCategories = async () => {
     try {
       const res = await categoryAPI.list();
@@ -98,23 +82,16 @@ export default function ProductsPage() {
       console.error("Error fetching categories:", error);
     }
   };
-
-  /* ================= EFFECTS ================= */
-
   useEffect(() => {
     fetchCategories();
   }, []);
-
   useEffect(() => {
     setPage(1);
     setHasMore(true);
     fetchProducts(1, true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, sortBy, selectedCategory, isAdmin]);
-
   useEffect(() => {
     if (!hasMore || loading) return;
-
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
@@ -127,27 +104,20 @@ export default function ProductsPage() {
       },
       { threshold: 0.5 }
     );
-
     const sentinel = document.getElementById("product-sentinel");
     if (sentinel) observer.observe(sentinel);
-
     return () => {
       if (sentinel) observer.unobserve(sentinel);
     };
   }, [hasMore, loading]);
-
-  /* ================= HANDLERS ================= */
-
   const handleProductClick = (product) => {
     setSelectedProduct(product);
     setIsModalOpen(true);
   };
-
   const closeModal = () => {
     setIsModalOpen(false);
     setTimeout(() => setSelectedProduct(null), 300);
   };
-
   return (
     <>
       <Navbar />
@@ -160,7 +130,6 @@ export default function ProductsPage() {
             Discover our handcrafted selection of premium candles and
             accessories, designed to elevate your space.
           </p>
-
           {isAdmin && (
             <div className="mt-8">
               <Link
@@ -173,7 +142,6 @@ export default function ProductsPage() {
             </div>
           )}
         </div>
-
         <FilterBar
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -183,7 +151,6 @@ export default function ProductsPage() {
           setSelectedCategory={setSelectedCategory}
           categories={categories}
         />
-
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {products.length === 0 && !loading ? (
             <div className="text-center py-20">
@@ -218,8 +185,7 @@ export default function ProductsPage() {
               ))}
             </div>
           )}
-
-          {/* SENTINEL FOR INFINITE SCROLL */}
+          {}
           <div
             id="product-sentinel"
             className="h-20 flex justify-center items-center mt-8"
@@ -234,7 +200,6 @@ export default function ProductsPage() {
             )}
           </div>
         </div>
-
         <ProductDetailsModal
           product={selectedProduct}
           isOpen={isModalOpen}

@@ -1,26 +1,19 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import axios from "axios";
 import toast from "react-hot-toast";
-
-import { API_BASE_URL } from "../../utils/api";
+import { authAPI } from "../../utils/api";
 import { useAuth } from "../../context/AuthContext";
-
 function Register() {
   const { isLoggedIn } = useAuth();
   const router = useRouter();
-
-  // ✅ BLOCK PAGE IF ALREADY LOGGED IN
   useEffect(() => {
     if (isLoggedIn) {
-      router.replace("/"); // redirect to home
+      router.replace("/"); 
     }
   }, [isLoggedIn, router]);
-
   const [formData, setFormData] = useState({
     name: "",
     username: "",
@@ -28,10 +21,8 @@ function Register() {
     password: "",
     confirm_password: "",
   });
-
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-
   const getErrorMessage = (err, fallback = "Registration failed ❌") => {
     if (err.response?.data?.ERROR) return err.response.data.ERROR;
     if (err.response?.data?.message) return err.response.data.message;
@@ -40,22 +31,18 @@ function Register() {
     if (err.request) return "No response from server. Check your network.";
     return fallback;
   };
-
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
-
     if (formData.password !== formData.confirm_password) {
       setLoading(false);
       toast.error("❌ Passwords do not match");
       setMessage("❌ Passwords do not match");
       return;
     }
-
     const payload = {
       name: formData.name.trim(),
       username: formData.username.trim().toLowerCase(),
@@ -63,19 +50,12 @@ function Register() {
       password: formData.password,
       confirm_password: formData.confirm_password,
     };
-
     try {
-      const res = await axios.post(`${API_BASE_URL}/auth/register`, payload, {
-        headers: { "Content-Type": "application/json" },
-        timeout: 8000,
-      });
-
+      const res = await authAPI.register(payload);
       setLoading(false);
-
       if (res.status === 201 || res.data?.message?.includes("success")) {
         toast.success("✅ Registration successful! Redirecting...");
         setMessage("✅ Registration successful! Redirecting...");
-
         setFormData({
           name: "",
           username: "",
@@ -83,7 +63,6 @@ function Register() {
           password: "",
           confirm_password: "",
         });
-
         setTimeout(() => router.push("/login"), 1200);
       } else {
         const msg = res.data?.ERROR || "Registration failed ❌";
@@ -98,7 +77,6 @@ function Register() {
       setMessage(`❌ ${msg}`);
     }
   };
-
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-pink-100 via-white to-pink-50 px-4 relative">
       <button
@@ -108,12 +86,10 @@ function Register() {
         <ArrowLeft size={20} />
         <span className="font-medium">Back to Home</span>
       </button>
-
       <div className="w-full max-w-md bg-white/90 backdrop-blur-lg p-8 rounded-2xl shadow-lg border border-pink-100">
         <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
           Create your <span className="text-pink-600">Messia</span> account
         </h2>
-
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-gray-700 font-medium mb-1">
@@ -129,7 +105,6 @@ function Register() {
               className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 focus:ring-2 focus:ring-pink-500 outline-none transition-all"
             />
           </div>
-
           <div>
             <label className="block text-gray-700 font-medium mb-1">
               Username
@@ -144,7 +119,6 @@ function Register() {
               className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 focus:ring-2 focus:ring-pink-500 outline-none transition-all"
             />
           </div>
-
           <div>
             <label className="block text-gray-700 font-medium mb-1">
               Email
@@ -159,7 +133,6 @@ function Register() {
               className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 focus:ring-2 focus:ring-pink-500 outline-none transition-all"
             />
           </div>
-
           <div>
             <label className="block text-gray-700 font-medium mb-1">
               Password
@@ -174,7 +147,6 @@ function Register() {
               className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 focus:ring-2 focus:ring-pink-500 outline-none transition-all"
             />
           </div>
-
           <div>
             <label className="block text-gray-700 font-medium mb-1">
               Confirm Password
@@ -189,7 +161,6 @@ function Register() {
               className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 focus:ring-2 focus:ring-pink-500 outline-none transition-all"
             />
           </div>
-
           <button
             type="submit"
             disabled={loading}
@@ -198,7 +169,6 @@ function Register() {
             {loading ? "Creating Account..." : "Sign Up"}
           </button>
         </form>
-
         {message && (
           <p
             className={`text-center mt-4 text-sm ${
@@ -208,7 +178,6 @@ function Register() {
             {message}
           </p>
         )}
-
         <p className="text-center text-gray-600 text-sm mt-6">
           Already have an account?{" "}
           <Link
@@ -222,5 +191,4 @@ function Register() {
     </div>
   );
 }
-
 export default Register;

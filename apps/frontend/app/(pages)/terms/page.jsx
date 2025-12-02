@@ -3,7 +3,6 @@ export const metadata = {
   description:
     "Read the Terms of Service for Messia to understand the rules and regulations for using our website and services.",
 };
-
 export default function TermsPage() {
   return (
     <main className="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
@@ -14,7 +13,6 @@ export default function TermsPage() {
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
           Last updated: December 2025
         </p>
-
         <div className="mt-8 space-y-8 text-sm leading-relaxed sm:text-base">
           <p>
             Welcome to <span className="font-semibold">Messia</span>! These
@@ -24,8 +22,7 @@ export default function TermsPage() {
             to be bound by these Terms. If you do not agree to these Terms,
             please do not use our Service.
           </p>
-
-          {/* 1. Acceptance of Terms */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">1. Acceptance of Terms</h2>
             <p className="mt-3">
@@ -35,8 +32,7 @@ export default function TermsPage() {
               agreement.
             </p>
           </section>
-
-          {/* 2. User Accounts */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">2. User Accounts</h2>
             <p className="mt-3">
@@ -47,8 +43,7 @@ export default function TermsPage() {
               unauthorized use of your account.
             </p>
           </section>
-
-          {/* 3. Products and Services */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">3. Products and Services</h2>
             <p className="mt-3">
@@ -67,8 +62,7 @@ export default function TermsPage() {
               are subject to change.
             </p>
           </section>
-
-          {/* 4. Purchases and Payment */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">4. Purchases and Payment</h2>
             <p className="mt-3">
@@ -80,8 +74,7 @@ export default function TermsPage() {
               and contact you as needed.
             </p>
           </section>
-
-          {/* 5. Prohibited Activities */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">5. Prohibited Activities</h2>
             <p className="mt-3">
@@ -111,8 +104,7 @@ export default function TermsPage() {
               </li>
             </ul>
           </section>
-
-          {/* 6. Intellectual Property Rights */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">
               6. Intellectual Property Rights
@@ -127,8 +119,7 @@ export default function TermsPage() {
               us, and are protected by copyright and trademark laws.
             </p>
           </section>
-
-          {/* 7. Limitation of Liability */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">
               7. Limitation of Liability
@@ -142,8 +133,7 @@ export default function TermsPage() {
               have been advised of the possibility of such damages.
             </p>
           </section>
-
-          {/* 8. Governing Law */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">8. Governing Law</h2>
             <p className="mt-3">
@@ -154,8 +144,7 @@ export default function TermsPage() {
               with these terms.
             </p>
           </section>
-
-          {/* 9. Changes to Terms */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">9. Changes to Terms</h2>
             <p className="mt-3">
@@ -166,8 +155,7 @@ export default function TermsPage() {
               receive specific notice of each such change.
             </p>
           </section>
-
-          {/* 10. Contact Us */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">10. Contact Us</h2>
             <p className="mt-3">

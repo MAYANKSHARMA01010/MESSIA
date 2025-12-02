@@ -1,14 +1,10 @@
 "use client";
-
 import React from "react";
 import { Minus, Plus, ShoppingBag } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
-
 export default function ProductCard({ product, onClick }) {
   const { cart, addToCart, increaseQty, decreaseQty } = useCart();
-
   const item = cart.find((i) => i.productId === product.id);
-
   return (
     <div className="group">
       <div
@@ -16,18 +12,16 @@ export default function ProductCard({ product, onClick }) {
         onClick={() => onClick(product)}
       >
         <img
-          src={product.images?.[0] || "https://placehold.co/600x800"}
+          src={product.images?.[0] || "https:
           alt={product.name}
           className="h-full w-full object-cover transition group-hover:scale-110"
         />
       </div>
-
       <div className="mt-3">
         <div className="flex justify-between">
           <h3 className="font-medium">{product.name}</h3>
           <p className="font-semibold">₹{product.price}</p>
         </div>
-
         {!item && (
           <button
             onClick={() => addToCart(product)}
@@ -37,15 +31,12 @@ export default function ProductCard({ product, onClick }) {
             Add to Cart
           </button>
         )}
-
         {item && (
           <div className="mt-3 flex justify-center items-center gap-4 bg-gray-100 py-2 rounded-lg">
             <button onClick={() => decreaseQty(product.id)}>
               <Minus size={18} />
             </button>
-
             <span className="font-bold">{item.quantity}</span>
-
             <button onClick={() => increaseQty(product.id)}>
               <Plus size={18} />
             </button>

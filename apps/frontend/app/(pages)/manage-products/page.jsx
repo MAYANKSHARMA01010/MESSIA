@@ -1,24 +1,18 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { adminProductAPI, categoryAPI } from "../../utils/api";
 import Footer from "@/app/components/Footer";
 import Navbar from "@/app/components/Navbar";
-
 export default function ManageProductsPage() {
-  /* ================= STATE ================= */
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
-
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("newest");
-
   const [showForm, setShowForm] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
-
   const emptyForm = {
     name: "",
     description: "",
@@ -28,19 +22,13 @@ export default function ManageProductsPage() {
     images: [""],
     isVisible: true,
   };
-
   const [form, setForm] = useState(emptyForm);
-
-  /* ================= LOAD DATA ================= */
-
   const fetchProducts = async (currentPage, shouldReset = false) => {
     if (loading) return;
     setLoading(true);
-
     try {
       let sortBy = "createdAt";
       let order = "desc";
-
       if (sort === "price-low") {
         sortBy = "price";
         order = "asc";
@@ -48,7 +36,6 @@ export default function ManageProductsPage() {
         sortBy = "price";
         order = "desc";
       }
-
       const res = await adminProductAPI.list({
         page: currentPage,
         limit: 30,
@@ -56,13 +43,10 @@ export default function ManageProductsPage() {
         sortBy,
         order,
       });
-
       const newProducts = res.data.products;
-
       if (shouldReset) {
         setProducts(newProducts);
       } else {
-        // Filter out duplicates to prevent "same key" errors
         setProducts((prev) => {
           const existingIds = new Set(prev.map((p) => String(p.id)));
           const uniqueNew = newProducts.filter(
@@ -71,7 +55,6 @@ export default function ManageProductsPage() {
           return [...prev, ...uniqueNew];
         });
       }
-
       setHasMore(newProducts.length === 30);
     } catch (err) {
       console.error(err);
@@ -80,7 +63,6 @@ export default function ManageProductsPage() {
       setLoading(false);
     }
   };
-
   const loadCategories = async () => {
     try {
       const res = await categoryAPI.list();
@@ -89,24 +71,16 @@ export default function ManageProductsPage() {
       console.error(err);
     }
   };
-
-  // Initial Load & Search/Sort Change
   useEffect(() => {
     setPage(1);
     setHasMore(true);
     fetchProducts(1, true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, sort]);
-
-  // Load Categories Once
   useEffect(() => {
     loadCategories();
   }, []);
-
-  // Infinite Scroll Observer
   useEffect(() => {
     if (!hasMore || loading) return;
-
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
@@ -119,23 +93,17 @@ export default function ManageProductsPage() {
       },
       { threshold: 1.0 }
     );
-
     const sentinel = document.getElementById("sentinel");
     if (sentinel) observer.observe(sentinel);
-
     return () => {
       if (sentinel) observer.unobserve(sentinel);
     };
   }, [hasMore, loading]);
-
-  /* ================= CRUD ================= */
-
   const openCreate = () => {
     setForm(emptyForm);
     setEditProduct(null);
     setShowForm(true);
   };
-
   const openEdit = (p) => {
     setEditProduct(p);
     setForm({
@@ -149,7 +117,6 @@ export default function ManageProductsPage() {
     });
     setShowForm(true);
   };
-
   const submitForm = async () => {
     try {
       const payload = {
@@ -161,13 +128,11 @@ export default function ManageProductsPage() {
         images: form.images.filter(Boolean),
         isVisible: form.isVisible,
       };
-
       if (editProduct) {
         await adminProductAPI.update(editProduct.id, payload);
       } else {
         await adminProductAPI.create(payload);
       }
-
       setShowForm(false);
       loadProducts();
     } catch (err) {
@@ -175,10 +140,8 @@ export default function ManageProductsPage() {
       alert("Save failed");
     }
   };
-
   const deleteProduct = async (id) => {
     if (!confirm("Delete this product permanently?")) return;
-
     try {
       await adminProductAPI.remove(id);
       loadProducts();
@@ -187,7 +150,6 @@ export default function ManageProductsPage() {
       alert("Delete failed");
     }
   };
-
   const toggleVisibility = async (p) => {
     try {
       await adminProductAPI.update(p.id, {
@@ -199,16 +161,12 @@ export default function ManageProductsPage() {
       alert("Update failed");
     }
   };
-
-  /* ================= RENDER ================= */
-
   if (loading) return <div className="p-10">Loading admin panel...</div>;
-
   return (
     <>
       <Navbar />
       <div className="p-10 space-y-6">
-        {/* HEADER */}
+        {}
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">Manage Products</h1>
           <button
@@ -218,8 +176,7 @@ export default function ManageProductsPage() {
             + Add Product
           </button>
         </div>
-
-        {/* FILTER BAR */}
+        {}
         <div className="flex gap-4">
           <input
             className="border px-4 py-2 w-64"
@@ -227,7 +184,6 @@ export default function ManageProductsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-
           <select
             className="border px-4 py-2"
             value={sort}
@@ -238,8 +194,7 @@ export default function ManageProductsPage() {
             <option value="price-high">Price (High → Low)</option>
           </select>
         </div>
-
-        {/* TABLE */}
+        {}
         <table className="w-full border text-sm">
           <thead className="bg-gray-100">
             <tr className="[&>th]:p-2 text-left">
@@ -252,7 +207,6 @@ export default function ManageProductsPage() {
               <th className="w-[180px]">Actions</th>
             </tr>
           </thead>
-
           <tbody>
             {products.map((p) => (
               <tr key={p.id} className="border-t [&>td]:p-2">
@@ -268,7 +222,6 @@ export default function ManageProductsPage() {
                     <span className="text-red-600">Hidden</span>
                   )}
                 </td>
-
                 <td className="flex gap-2">
                   <button
                     className="border px-2 py-1"
@@ -276,7 +229,6 @@ export default function ManageProductsPage() {
                   >
                     Edit
                   </button>
-
                   <button
                     className={`border px-2 py-1 ${
                       p.isVisible
@@ -287,7 +239,6 @@ export default function ManageProductsPage() {
                   >
                     {p.isVisible ? "Hide" : "Show"}
                   </button>
-
                   <button
                     className="border px-2 py-1 text-red-600"
                     onClick={() => deleteProduct(p.id)}
@@ -297,7 +248,7 @@ export default function ManageProductsPage() {
                 </td>
               </tr>
             ))}
-            {/* SENTINEL FOR INFINITE SCROLL */}
+            {}
             <tr id="sentinel">
               <td colSpan="7" className="p-4 text-center text-gray-500">
                 {loading && "Loading more products..."}
@@ -306,22 +257,19 @@ export default function ManageProductsPage() {
             </tr>
           </tbody>
         </table>
-
-        {/* MODAL */}
+        {}
         {showForm && (
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
             <div className="bg-white p-6 w-[420px] space-y-3">
               <h2 className="font-bold">
                 {editProduct ? "Edit Product" : "Create Product"}
               </h2>
-
               <input
                 className="border px-3 py-2 w-full"
                 placeholder="Name"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
               />
-
               <textarea
                 className="border px-3 py-2 w-full"
                 placeholder="Description"
@@ -330,7 +278,6 @@ export default function ManageProductsPage() {
                   setForm({ ...form, description: e.target.value })
                 }
               />
-
               <input
                 className="border px-3 py-2 w-full"
                 placeholder="Price"
@@ -338,7 +285,6 @@ export default function ManageProductsPage() {
                 value={form.price}
                 onChange={(e) => setForm({ ...form, price: e.target.value })}
               />
-
               <input
                 className="border px-3 py-2 w-full"
                 placeholder="Stock"
@@ -346,8 +292,7 @@ export default function ManageProductsPage() {
                 value={form.stock}
                 onChange={(e) => setForm({ ...form, stock: e.target.value })}
               />
-
-              {/* CATEGORY DROPDOWN */}
+              {}
               <select
                 className="border px-3 py-2 w-full"
                 value={form.categoryId}
@@ -362,8 +307,7 @@ export default function ManageProductsPage() {
                   </option>
                 ))}
               </select>
-
-              {/* IMAGES ARRAY */}
+              {}
               {form.images.map((img, i) => (
                 <input
                   key={i}
@@ -377,7 +321,6 @@ export default function ManageProductsPage() {
                   }}
                 />
               ))}
-
               <button
                 onClick={() =>
                   setForm({ ...form, images: [...form.images, ""] })
@@ -386,7 +329,6 @@ export default function ManageProductsPage() {
               >
                 + Add another image
               </button>
-
               <label className="flex gap-2 items-center">
                 <input
                   type="checkbox"
@@ -397,7 +339,6 @@ export default function ManageProductsPage() {
                 />
                 Visible
               </label>
-
               <div className="flex justify-between pt-2">
                 <button
                   onClick={() => setShowForm(false)}
@@ -405,7 +346,6 @@ export default function ManageProductsPage() {
                 >
                   Cancel
                 </button>
-
                 <button
                   onClick={submitForm}
                   className="bg-black text-white px-4 py-2"

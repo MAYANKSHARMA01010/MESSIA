@@ -13,20 +13,17 @@ import {
   HelpCircle,
   Trash2,
 } from "lucide-react";
-
 const comingSoon = (feature) =>
   toast("🚧 " + feature + " coming soon!", {
     duration: 2500,
   });
-
 const ProfileSlider = ({ isAdmin, onNav, onLogout }) => {
   return (
     <div className="absolute right-0 mt-3 w-60 bg-white border shadow-xl rounded-xl p-2 space-y-1 animate-slideDown">
-      {/* ACCOUNT */}
+      {}
       <p className="px-3 py-1 text-xs text-gray-400 uppercase tracking-wide">
         Account
       </p>
-
       <SliderButton
         icon={<User size={16} />}
         label="Profile"
@@ -52,27 +49,21 @@ const ProfileSlider = ({ isAdmin, onNav, onLogout }) => {
         label="Manage Addresses"
         onClick={() => onNav("/addresses")}
       />
-
       <hr />
-
-      {/* PAYMENTS */}
+      {}
       <p className="px-3 py-1 text-xs text-gray-400 uppercase tracking-wide">
         1`` Payments
       </p>
-
       <SliderButton
         icon={<CreditCard size={16} />}
         label="Saved Cards"
         onClick={() => comingSoon("Saved cards")}
       />
-
       <hr />
-
-      {/* SETTINGS */}
+      {}
       <p className="px-3 py-1 text-xs text-gray-400 uppercase tracking-wide">
         Settings
       </p>
-
       <SliderButton
         icon={<Bell size={16} />}
         label="Notifications"
@@ -83,20 +74,18 @@ const ProfileSlider = ({ isAdmin, onNav, onLogout }) => {
         label="Help & Support"
         onClick={() => comingSoon("Support center")}
       />
-      {/* ADMIN */}
+      {}
       {isAdmin && (
         <>
           <hr />
           <p className="px-3 py-1 text-xs text-gray-400 uppercase tracking-wide">
             Admin
           </p>
-
           <SliderButton
             icon={<LayoutDashboard size={16} />}
             label="Admin Dashboard"
             onClick={() => onNav("/manage-products")}
           />
-
           <SliderButton
             icon={<ShoppingBag size={16} />}
             label="Manage Products"
@@ -104,17 +93,14 @@ const ProfileSlider = ({ isAdmin, onNav, onLogout }) => {
           />
         </>
       )}
-
       <hr />
-
-      {/* DANGER ZONE */}
+      {}
       <SliderButton
         icon={<LogOut size={16} />}
         label="Logout"
         onClick={onLogout}
         danger
       />
-
       <SliderButton
         icon={<Trash2 size={16} />}
         label="Delete Account"
@@ -124,10 +110,6 @@ const ProfileSlider = ({ isAdmin, onNav, onLogout }) => {
     </div>
   );
 };
-
-/* -------------------------------------------------------
-   INLINE BUTTON — SINGLE FILE ONLY
---------------------------------------------------------*/
 const SliderButton = ({ icon, label, onClick, danger, dangerOutline }) => {
   return (
     <button
@@ -147,5 +129,4 @@ const SliderButton = ({ icon, label, onClick, danger, dangerOutline }) => {
     </button>
   );
 };
-
 export default ProfileSlider;

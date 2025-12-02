@@ -1,34 +1,27 @@
 "use client";
-
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Menu, X, User, ChevronDown } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import ProfileSlider from "./ProfileSlider";
-
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showSlider, setShowSlider] = useState(false);
-
   const router = useRouter();
   const { isLoggedIn, isAdmin, user, logout } = useAuth();
-
   const toggleMenu = () => setIsOpen((prev) => !prev);
-
   const handleNavClick = (path) => {
     router.push(path);
     setIsOpen(false);
     setShowSlider(false);
   };
-
   const handleLogout = () => {
     logout();
     router.push("/");
     setShowSlider(false);
     setIsOpen(false);
   };
-
   return (
     <nav className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md shadow-sm z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,7 +32,6 @@ function Navbar() {
           >
             Messia<span className="text-pink-600">.</span>
           </button>
-
           <div className="hidden md:flex items-center space-x-8">
             <Link href="/" className="nav-link">
               Home
@@ -53,13 +45,11 @@ function Navbar() {
             <Link href="/contact" className="nav-link">
               Contact
             </Link>
-
             {isLoggedIn && (
               <Link href="/cart" className="nav-link">
                 Cart
               </Link>
             )}
-
             {!isLoggedIn ? (
               <>
                 <button
@@ -68,7 +58,6 @@ function Navbar() {
                 >
                   Login
                 </button>
-
                 <button
                   onClick={() => handleNavClick("/register")}
                   className="btn-primary"
@@ -86,7 +75,6 @@ function Navbar() {
                   <span>{user?.name || "User"}</span>
                   <ChevronDown size={16} />
                 </button>
-
                 {showSlider && (
                   <ProfileSlider
                     isAdmin={isAdmin}
@@ -97,7 +85,6 @@ function Navbar() {
               </div>
             )}
           </div>
-
           <button
             onClick={toggleMenu}
             className="md:hidden p-2 rounded-lg hover:bg-gray-100"
@@ -106,7 +93,6 @@ function Navbar() {
           </button>
         </div>
       </div>
-
       {isOpen && (
         <div className="fixed inset-0 bg-black/10 backdrop-blur-sm md:hidden">
           <div className="absolute top-16 left-0 w-full bg-white shadow-md p-4 space-y-3">
@@ -122,13 +108,11 @@ function Navbar() {
             <Link onClick={() => setIsOpen(false)} href="/contact">
               Contact
             </Link>
-
             {isLoggedIn && (
               <Link onClick={() => setIsOpen(false)} href="/cart">
                 Cart
               </Link>
             )}
-
             {!isLoggedIn ? (
               <>
                 <button
@@ -137,7 +121,6 @@ function Navbar() {
                 >
                   Login
                 </button>
-
                 <button
                   onClick={() => handleNavClick("/register")}
                   className="btn-primary w-full"
@@ -153,7 +136,6 @@ function Navbar() {
                 >
                   Profile
                 </button>
-
                 {isAdmin && (
                   <button
                     onClick={() => handleNavClick("/admin")}
@@ -162,7 +144,6 @@ function Navbar() {
                     Admin Panel
                   </button>
                 )}
-
                 <button onClick={handleLogout} className="btn-danger w-full">
                   Logout
                 </button>
@@ -174,5 +155,4 @@ function Navbar() {
     </nav>
   );
 }
-
 export default Navbar;

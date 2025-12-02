@@ -1,20 +1,13 @@
 const { prisma } = require("../config/database");
-
-/* ================================
-   HELPERS
-================================ */
 const calculateAndSend = (res, items) => {
   let totalItems = 0;
   let totalPrice = 0;
-
   items.forEach((item) => {
     totalItems += item.quantity;
     totalPrice += item.quantity * item.price;
   });
-
   return res.json({ items, totalItems, totalPrice });
 };
-
 const buildCartResponse = async (userId, res) => {
   try {
     const cart = await prisma.cart.findUnique({
@@ -27,7 +20,6 @@ const buildCartResponse = async (userId, res) => {
         },
       },
     });
-
     if (!cart || cart.items.length === 0) {
       return res.json({
         items: [],
@@ -35,7 +27,6 @@ const buildCartResponse = async (userId, res) => {
         totalPrice: 0,
       });
     }
-
     const items = cart.items.map((i) => ({
       id: i.id,
       productId: i.productId,
@@ -44,14 +35,12 @@ const buildCartResponse = async (userId, res) => {
       image: i.product?.images?.[0] || null,
       quantity: i.quantity,
     }));
-
     return calculateAndSend(res, items);
   } catch (err) {
     console.error("===== BUILD CART ERROR =====");
     console.error(err);
     console.error("MESSAGE:", err.message);
     console.error("META:", err.meta || null);
-
     return res.status(500).json({
       message: "Failed to build cart",
       dbError: err.message,
@@ -59,10 +48,6 @@ const buildCartResponse = async (userId, res) => {
     });
   }
 };
-
-/* ================================
-   GET CART
-================================ */
 const getCart = async (req, res) => {
   try {
     const userId = Number(req.user.id); 
@@ -72,7 +57,6 @@ const getCart = async (req, res) => {
     console.error(err);
     console.error("MESSAGE:", err.message);
     console.error("META:", err.meta || null);
-
     res.status(500).json({
       message: "Failed to fetch cart",
       dbError: err.message,
@@ -80,25 +64,18 @@ const getCart = async (req, res) => {
     });
   }
 };
-
-/* ================================
-   ADD TO CART
-================================ */
 const addToCart = async (req, res) => {
   try {
     const userId = Number(req.user.id);
     const productId = Number(req.body.productId);
-
     if (!productId) {
       return res.status(400).json({ message: "Product ID required" });
     }
-
     const cart = await prisma.cart.upsert({
       where: { userId },
       create: { userId },
       update: {},
     });
-
     await prisma.cartItem.upsert({
       where: {
         cartId_productId: {
@@ -115,14 +92,12 @@ const addToCart = async (req, res) => {
         quantity: 1,
       },
     });
-
     return await buildCartResponse(userId, res);
   } catch (err) {
     console.error("===== ADD CART ERROR =====");
     console.error(err);
     console.error("MESSAGE:", err.message);
     console.error("META:", err.meta || null);
-
     res.status(500).json({
       message: "Failed to add item",
       dbError: err.message,
@@ -130,26 +105,18 @@ const addToCart = async (req, res) => {
     });
   }
 };
-
-/* ================================
-   UPDATE ITEM QTY
-================================ */
 const updateQty = async (req, res) => {
   try {
     const userId = Number(req.user.id);
     const productId = Number(req.body.productId);
     const quantity = Number(req.body.quantity);
-
     if (!productId || quantity < 1) {
       return res.status(400).json({ message: "Invalid update data" });
     }
-
     const cart = await prisma.cart.findUnique({
       where: { userId },
     });
-
     if (!cart) return buildCartResponse(userId, res);
-
     await prisma.cartItem.update({
       where: {
         cartId_productId: {
@@ -159,14 +126,12 @@ const updateQty = async (req, res) => {
       },
       data: { quantity },
     });
-
     return await buildCartResponse(userId, res);
   } catch (err) {
     console.error("===== UPDATE QTY ERROR =====");
     console.error(err);
     console.error("MESSAGE:", err.message);
     console.error("META:", err.meta || null);
-
     res.status(500).json({
       message: "Failed to update quantity",
       dbError: err.message,
@@ -174,21 +139,14 @@ const updateQty = async (req, res) => {
     });
   }
 };
-
-/* ================================
-   REMOVE ITEM
-================================ */
 const removeItem = async (req, res) => {
   try {
     const userId = Number(req.user.id);
     const productId = Number(req.params.productId);
-
     const cart = await prisma.cart.findUnique({
       where: { userId },
     });
-
     if (!cart) return buildCartResponse(userId, res);
-
     await prisma.cartItem.delete({
       where: {
         cartId_productId: {
@@ -197,14 +155,12 @@ const removeItem = async (req, res) => {
         },
       },
     });
-
     return await buildCartResponse(userId, res);
   } catch (err) {
     console.error("===== REMOVE ITEM ERROR =====");
     console.error(err);
     console.error("MESSAGE:", err.message);
     console.error("META:", err.meta || null);
-
     res.status(500).json({
       message: "Failed to remove item",
       dbError: err.message,
@@ -212,31 +168,22 @@ const removeItem = async (req, res) => {
     });
   }
 };
-
-/* ================================
-   CLEAR CART
-================================ */
 const clearCart = async (req, res) => {
   try {
     const userId = Number(req.user.id);
-
     const cart = await prisma.cart.findUnique({
       where: { userId },
     });
-
     if (!cart) return buildCartResponse(userId, res);
-
     await prisma.cartItem.deleteMany({
       where: { cartId: cart.id },
     });
-
     return buildCartResponse(userId, res);
   } catch (err) {
     console.error("===== CLEAR CART ERROR =====");
     console.error(err);
     console.error("MESSAGE:", err.message);
     console.error("META:", err.meta || null);
-
     res.status(500).json({
       message: "Failed to clear cart",
       dbError: err.message,
@@ -244,7 +191,6 @@ const clearCart = async (req, res) => {
     });
   }
 };
-
 module.exports = {
   getCart,
   addToCart,

@@ -1,21 +1,17 @@
 "use client";
-
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import { Toaster } from "react-hot-toast";
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
-
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -26,7 +22,6 @@ export default function RootLayout({ children }) {
           <CartProvider>
             {children}
           </CartProvider>
-
           <Toaster
             position="top-right"
             toastOptions={{
@@ -45,7 +40,6 @@ export default function RootLayout({ children }) {
               },
             }}
           />
-
         </AuthProvider>
       </body>
     </html>

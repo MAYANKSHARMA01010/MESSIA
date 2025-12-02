@@ -3,7 +3,6 @@ export const metadata = {
   description:
     "Learn about how Messia uses cookies and similar technologies to improve your experience.",
 };
-
 export default function CookiePolicyPage() {
   return (
     <main className="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
@@ -14,7 +13,6 @@ export default function CookiePolicyPage() {
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
           Last updated: December 2025
         </p>
-
         <div className="mt-8 space-y-8 text-sm leading-relaxed sm:text-base">
           <p>
             This Cookie Policy explains how{" "}
@@ -24,8 +22,7 @@ export default function CookiePolicyPage() {
             app. It explains what these technologies are and why we use them, as
             well as your rights to control our use of them.
           </p>
-
-          {/* 1. What are cookies? */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">1. What are cookies?</h2>
             <p className="mt-3">
@@ -35,8 +32,7 @@ export default function CookiePolicyPage() {
               more efficiently, as well as to provide reporting information.
             </p>
           </section>
-
-          {/* 2. Why do we use cookies? */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">2. Why do we use cookies?</h2>
             <p className="mt-3">
@@ -48,8 +44,7 @@ export default function CookiePolicyPage() {
               enhance the experience on our Service.
             </p>
           </section>
-
-          {/* 3. Types of Cookies */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">
               3. Types of Cookies We Use
@@ -88,8 +83,7 @@ export default function CookiePolicyPage() {
               </li>
             </ul>
           </section>
-
-          {/* 4. How can I control cookies? */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">
               4. How can I control cookies?
@@ -106,8 +100,7 @@ export default function CookiePolicyPage() {
               may be restricted.
             </p>
           </section>
-
-          {/* 5. Updates to this policy */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">5. Updates to this Policy</h2>
             <p className="mt-3">
@@ -118,8 +111,7 @@ export default function CookiePolicyPage() {
               use of cookies and related technologies.
             </p>
           </section>
-
-          {/* 6. Contact */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">6. Contact Us</h2>
             <p className="mt-3">

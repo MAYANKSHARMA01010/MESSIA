@@ -3,7 +3,6 @@ export const metadata = {
   description:
     "Find answers to common questions about Messia, orders, shipping, returns, and more.",
 };
-
 export default function FAQsPage() {
   return (
     <main className="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
@@ -14,9 +13,8 @@ export default function FAQsPage() {
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
           Last updated: December 2025
         </p>
-
         <div className="mt-8 space-y-12 text-sm leading-relaxed sm:text-base">
-          {/* Orders & Shipping */}
+          {}
           <section>
             <h2 className="text-xl font-semibold text-indigo-600 dark:text-indigo-400">
               Orders &amp; Shipping
@@ -55,8 +53,7 @@ export default function FAQsPage() {
               </div>
             </div>
           </section>
-
-          {/* Returns & Refunds */}
+          {}
           <section>
             <h2 className="text-xl font-semibold text-indigo-600 dark:text-indigo-400">
               Returns &amp; Refunds
@@ -84,8 +81,7 @@ export default function FAQsPage() {
               </div>
             </div>
           </section>
-
-          {/* Account & Payments */}
+          {}
           <section>
             <h2 className="text-xl font-semibold text-indigo-600 dark:text-indigo-400">
               Account &amp; Payments
@@ -111,8 +107,7 @@ export default function FAQsPage() {
               </div>
             </div>
           </section>
-
-          {/* Contact */}
+          {}
           <section>
             <h2 className="text-xl font-semibold text-indigo-600 dark:text-indigo-400">
               Still have questions?

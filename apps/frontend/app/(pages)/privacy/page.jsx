@@ -3,7 +3,6 @@ export const metadata = {
   description:
     "Read the Privacy Policy for Messia to understand how we collect, use, and protect your information.",
 };
-
 export default function PrivacyPolicyPage() {
   return (
     <main className="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
@@ -14,7 +13,6 @@ export default function PrivacyPolicyPage() {
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
           Last updated: December 2025
         </p>
-
         <div className="mt-8 space-y-8 text-sm leading-relaxed sm:text-base">
           <p>
             Welcome to <span className="font-semibold">Messia</span>{" "}
@@ -25,15 +23,13 @@ export default function PrivacyPolicyPage() {
             application, or any related services (collectively, the
             &quot;Service&quot;).
           </p>
-
-          {/* 1. Information We Collect */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">1. Information We Collect</h2>
             <p className="mt-3">
               We may collect the following categories of information when you
               interact with Messia:
             </p>
-
             <h3 className="mt-4 text-base font-semibold">
               a) Personal Information
             </h3>
@@ -46,7 +42,6 @@ export default function PrivacyPolicyPage() {
                 Account credentials (such as username and hashed password)
               </li>
             </ul>
-
             <h3 className="mt-4 text-base font-semibold">
               b) Order &amp; Usage Information
             </h3>
@@ -55,7 +50,6 @@ export default function PrivacyPolicyPage() {
               <li>Customer support messages and communications</li>
               <li>Interactions with features of the Service</li>
             </ul>
-
             <h3 className="mt-4 text-base font-semibold">
               c) Technical Information
             </h3>
@@ -66,8 +60,7 @@ export default function PrivacyPolicyPage() {
               <li>Cookies and similar tracking technologies</li>
             </ul>
           </section>
-
-          {/* 2. How We Use Your Information */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">
               2. How We Use Your Information
@@ -92,8 +85,7 @@ export default function PrivacyPolicyPage() {
               </li>
             </ul>
           </section>
-
-          {/* 3. Cookies & Tracking */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">
               3. Cookies &amp; Tracking Technologies
@@ -113,8 +105,7 @@ export default function PrivacyPolicyPage() {
               Service may not function properly.
             </p>
           </section>
-
-          {/* 4. Sharing */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">
               4. How We Share Your Information
@@ -149,8 +140,7 @@ export default function PrivacyPolicyPage() {
               use it only for the purposes for which it was shared.
             </p>
           </section>
-
-          {/* 5. Data Security */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">5. Data Security</h2>
             <p className="mt-3">
@@ -168,8 +158,7 @@ export default function PrivacyPolicyPage() {
               cannot guarantee absolute security.
             </p>
           </section>
-
-          {/* 6. Data Retention */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">6. Data Retention</h2>
             <p className="mt-3">
@@ -179,8 +168,7 @@ export default function PrivacyPolicyPage() {
               tax, accounting, or other legal requirements).
             </p>
           </section>
-
-          {/* 7. Your Rights */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">
               7. Your Rights &amp; Choices
@@ -204,8 +192,7 @@ export default function PrivacyPolicyPage() {
               request.
             </p>
           </section>
-
-          {/* 8. Children’s Privacy */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">
               8. Children&apos;s Privacy
@@ -218,8 +205,7 @@ export default function PrivacyPolicyPage() {
               us, and we will take steps to delete such information.
             </p>
           </section>
-
-          {/* 9. Changes */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">
               9. Changes to This Privacy Policy
@@ -233,8 +219,7 @@ export default function PrivacyPolicyPage() {
               information.
             </p>
           </section>
-
-          {/* 10. Contact */}
+          {}
           <section>
             <h2 className="text-xl font-semibold">10. Contact Us</h2>
             <p className="mt-3">
@@ -244,7 +229,7 @@ export default function PrivacyPolicyPage() {
             <p className="mt-2">
               <span className="block font-semibold">Messia Support</span>
               <span className="block">Email: support@messia.app</span>
-              {/* Replace with your real contact info */}
+              {}
             </p>
           </section>
         </div>
