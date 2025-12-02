@@ -10,14 +10,14 @@ const {
 } = require("../controllers/productController");
 
 const { authenticate } = require("../utils/auth");
-const { verifyAdmin } = require("../middlewares/adminMiddleware"); 
+const { verifyAdmin } = require("../middlewares/adminMiddleware");
 const { validateProduct } = require("../middlewares/productMiddleware");
 
-// Public Routes
+/* ---------- PUBLIC ROUTES ---------- */
 productRouter.get("/", getAllProducts);
 productRouter.get("/:id", getProductById);
 
-// Admin Routes
+/* ---------- ADMIN ROUTES ---------- */
 productRouter.post(
   "/",
   authenticate,
@@ -25,7 +25,9 @@ productRouter.post(
   validateProduct,
   createProduct
 );
+
 productRouter.put("/:id", authenticate, verifyAdmin, updateProduct);
+
 productRouter.delete("/:id", authenticate, verifyAdmin, deleteProduct);
 
 module.exports = productRouter;

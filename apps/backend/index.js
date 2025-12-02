@@ -3,7 +3,8 @@ const corsMiddleware = require("./config/cors.js");
 const authRouter = require("./routes/authRoute.js");
 const productRouter = require("./routes/productRoute.js");
 const cartRouter = require("./routes/cartRoute.js");
-const addressRouter = require("./routes/addressRoutes.js"); // ✅ IMPORT
+const addressRouter = require("./routes/addressRoutes.js");
+const categoryRouter = require("./routes/categoryRoute.js"); // ✅ IMPORT
 
 require("dotenv").config();
 
@@ -17,7 +18,8 @@ app.use(express.json());
 app.use("/api/auth", authRouter);
 app.use("/api/products", productRouter);
 app.use("/api/cart", cartRouter);
-app.use("/api/address", addressRouter); // ✅ USE ROUTER
+app.use("/api/address", addressRouter);
+app.use("/api/categories", categoryRouter); // ✅ USE ROUTER
 
 /* ---------------- ROOT ------------------ */
 app.get("/", (req, res) => {

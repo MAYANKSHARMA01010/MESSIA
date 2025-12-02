@@ -101,3 +101,27 @@ export const cartAPI = {
   remove: (id) => api.delete(`/cart/remove/${id}`),
   clear: () => api.delete("/cart/clear"),
 };
+
+export const adminProductAPI = {
+  list: (params = {}) =>
+    api.get("/products", {
+      params: {
+        ...params,
+        showHidden: "true", // admin only
+      },
+    }),
+
+  create: (data) => api.post("/products", data),
+
+  update: (id, data) => api.put(`/products/${id}`, data),
+
+  remove: (id) => api.delete(`/products/${id}`),
+};
+
+export const categoryAPI = {
+  list: () => api.get("/categories"),
+  getOne: (id) => api.get(`/categories/${id}`),
+  create: (data) => api.post("/categories", data),
+  update: (id, data) => api.put(`/categories/${id}`, data),
+  remove: (id) => api.delete(`/categories/${id}`),
+};

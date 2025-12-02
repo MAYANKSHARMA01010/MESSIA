@@ -83,7 +83,6 @@ const ProfileSlider = ({ isAdmin, onNav, onLogout }) => {
         label="Help & Support"
         onClick={() => comingSoon("Support center")}
       />
-
       {/* ADMIN */}
       {isAdmin && (
         <>
@@ -95,7 +94,13 @@ const ProfileSlider = ({ isAdmin, onNav, onLogout }) => {
           <SliderButton
             icon={<LayoutDashboard size={16} />}
             label="Admin Dashboard"
-            onClick={() => onNav("/admin")}
+            onClick={() => onNav("/manage-products")}
+          />
+
+          <SliderButton
+            icon={<ShoppingBag size={16} />}
+            label="Manage Products"
+            onClick={() => onNav("/manage-products")}
           />
         </>
       )}
