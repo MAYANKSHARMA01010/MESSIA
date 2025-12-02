@@ -57,7 +57,7 @@ MESSIA is a full-stack e-commerce platform designed for gifting premium products
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/MAYANKSHARMA01010/MESSIA.git
 cd messia
 ```
 
@@ -73,7 +73,7 @@ npm install
 Create a `.env` file in `apps/backend` with the following variables:
 
 ```env
-PORT=4000
+PORT=5001
 DATABASE_URL="postgresql://user:password@localhost:5432/messia_db?schema=public"
 JWT_SECRET="your_super_secret_key"
 ```
@@ -90,21 +90,21 @@ Start the backend server:
 npm run dev
 ```
 
-The backend will run on `http://localhost:4000`.
+The backend will run on `http://localhost:5001`.
 
 ### 3. Frontend Setup
 
 Navigate to the frontend directory and install dependencies:
 
 ```bash
-cd ../frontend
+cd ..apps/frontend
 npm install
 ```
 
-Create a `.env.local` file in `apps/frontend` (optional, if needed for API URL):
+Create a `.env` file in `apps/frontend` (optional, if needed for API URL):
 
 ```env
-NEXT_PUBLIC_API_URL="http://localhost:4000/api"
+NEXT_PUBLIC_API_URL="http://localhost:5001/api"
 ```
 
 Start the frontend development server:
