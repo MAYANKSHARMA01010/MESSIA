@@ -52,7 +52,7 @@ const ProfileSlider = ({ isAdmin, onNav, onLogout }) => {
       <hr />
       {}
       <p className="px-3 py-1 text-xs text-gray-400 uppercase tracking-wide">
-        1`` Payments
+        Payments
       </p>
       <SliderButton
         icon={<CreditCard size={16} />}

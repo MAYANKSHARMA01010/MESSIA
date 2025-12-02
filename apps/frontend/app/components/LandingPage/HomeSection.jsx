@@ -56,6 +56,7 @@ export default function HomeSection({ ctaOnClick = () => {} }) {
             src={slide.image}
             alt={slide.title}
             fill
+            sizes="100vw"
             priority={index === current}
             className="object-cover w-full h-full"
           />

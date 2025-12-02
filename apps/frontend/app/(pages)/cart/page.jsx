@@ -62,10 +62,11 @@ export default function CartPage() {
                   <Image
                     src={
                       item.image ||
-                      "https://dummyimage.com/300x300/f3f4f6/9ca3af&text=No+Image"
+                      "https://dummyimage.com/300x300/f3f4f6/9ca3af?text=No+Image"
                     }
                     alt={item.name}
                     fill
+                    sizes="100px"
                     className="object-cover"
                   />
                 </div>
@@ -73,9 +74,7 @@ export default function CartPage() {
                 <div className="flex-1 flex flex-col justify-between gap-3">
                   <div>
                     <h3 className="font-medium leading-tight">{item.name}</h3>
-                    <p className="text-gray-500 text-sm mt-1">
-                      ₹{item.price}
-                    </p>
+                    <p className="text-gray-500 text-sm mt-1">₹{item.price}</p>
                   </div>
 
                   <div className="flex items-center justify-between">
