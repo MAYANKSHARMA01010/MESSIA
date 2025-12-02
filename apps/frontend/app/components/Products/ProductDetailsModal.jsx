@@ -17,10 +17,7 @@ export default function ProductDetailsModal({ product, isOpen, onClose }) {
     if (product) setActiveImage(0);
   }, [product]);
   if (!isOpen || !product) return null;
-  const images =
-    product.images?.length > 0
-      ? product.images
-      : ["https:
+  const images = product.images?.length > 0 ? product.images : [];
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
       <div

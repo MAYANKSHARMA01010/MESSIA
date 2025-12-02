@@ -1,48 +1,37 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Leaf,
-  Heart,
-  Award,
-  Truck,
-  Gift
-} from "lucide-react";
+import { Leaf, Heart, Award, Truck, Gift } from "lucide-react";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
-const Card = ({ children, className = "" }) => {
-  return (
-    <div
-      className={`bg-white rounded-xl border shadow-sm hover:shadow-xl transition ${className}`}
-    >
-      {children}
-    </div>
-  );
-};
-const CardContent = ({ children, className = "" }) => {
-  return <div className={`p-8 ${className}`}>{children}</div>;
-};
-const Button = ({
-  children,
-  variant = "default",
-  className = "",
-}) => {
+
+const Card = ({ children, className = "" }) => (
+  <div className={`bg-white rounded-xl border shadow-sm hover:shadow-xl transition ${className}`}>
+    {children}
+  </div>
+);
+
+const CardContent = ({ children, className = "" }) => (
+  <div className={`p-8 ${className}`}>{children}</div>
+);
+
+const Button = ({ children, variant = "default", className = "" }) => {
   const base =
     "inline-flex items-center justify-center rounded-full font-medium transition focus:outline-none";
   const styles = {
-    default:
-      "bg-pink-600 text-white hover:bg-pink-700 px-8 py-3",
+    default: "bg-pink-600 text-white hover:bg-pink-700 px-8 py-3",
     outline:
       "border border-white text-white hover:bg-white hover:text-pink-600 px-8 py-3",
-    light:
-      "bg-white text-pink-600 hover:bg-gray-100 px-8 py-3",
+    light: "bg-white text-pink-600 hover:bg-gray-100 px-8 py-3",
   };
+
   return (
     <button className={`${base} ${styles[variant]} ${className}`}>
       {children}
     </button>
   );
 };
+
 export default function About() {
   const values = [
     {
@@ -70,28 +59,28 @@ export default function About() {
         "Pan-India delivery with careful packaging & trusted shipping partners.",
     },
   ];
+
   const team = [
     {
       name: "Sarah Johnson",
       role: "Founder",
-      image: "https:
+      image: "https://i.pravatar.cc/300?img=1",
       bio: "Started Messia to transform everyday gifting into magical experiences.",
     },
     {
       name: "Michael Chen",
       role: "Creative Director",
-      image:
-        "https:
+      image: "https://i.pravatar.cc/300?img=2",
       bio: "Designs unique gift combinations that delight customers nationwide.",
     },
     {
       name: "Emma Rodriguez",
       role: "Quality Manager",
-      image:
-        "https:
+      image: "https://i.pravatar.cc/300?img=3",
       bio: "Ensures every product meets our highest quality standards.",
     },
   ];
+
   const process = [
     {
       step: "01",
@@ -118,11 +107,11 @@ export default function About() {
         "Fast shipping ensures your loved ones receive joy on time.",
     },
   ];
+
   return (
     <>
       <Navbar />
       <div className="min-h-screen bg-gray-50 pt-20">
-        {}
         <section className="bg-gradient-to-br from-pink-50 to-red-100 py-20 text-center">
           <h1 className="text-4xl lg:text-5xl font-serif font-bold mb-6">
             Our Story
@@ -132,13 +121,11 @@ export default function About() {
             celebrated beautifully — turning emotions into lasting memories.
           </p>
         </section>
-        {}
+
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="text-3xl font-serif font-bold mb-6">
-                Our Mission
-              </h2>
+              <h2 className="text-3xl font-serif font-bold mb-6">Our Mission</h2>
               <p className="text-gray-600 mb-6">
                 Our mission is to make gifting simple, heartfelt, and effortless.
                 From birthdays to anniversaries, Messia curates premium experiences
@@ -163,30 +150,24 @@ export default function About() {
             </div>
           </div>
         </section>
-        {}
+
         <section className="py-16 bg-pink-50">
           <div className="max-w-7xl mx-auto px-6 text-center">
-            <h2 className="text-3xl font-serif font-bold">
-              Our Values
-            </h2>
+            <h2 className="text-3xl font-serif font-bold">Our Values</h2>
             <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8 mt-10">
               {values.map((v, i) => (
                 <Card key={i}>
                   <CardContent>
-                    <div className="flex justify-center mb-4">
-                      {v.icon}
-                    </div>
+                    <div className="flex justify-center mb-4">{v.icon}</div>
                     <h3 className="font-semibold mb-3">{v.title}</h3>
-                    <p className="text-gray-600 text-sm">
-                      {v.description}
-                    </p>
+                    <p className="text-gray-600 text-sm">{v.description}</p>
                   </CardContent>
                 </Card>
               ))}
             </div>
           </div>
         </section>
-        {}
+
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-6">
             <h2 className="text-3xl font-serif font-bold text-center mb-16">
@@ -201,22 +182,16 @@ export default function About() {
                       alt={m.name}
                       className="w-32 h-32 rounded-full mx-auto mb-6 object-cover shadow-md"
                     />
-                    <h3 className="font-semibold text-lg">
-                      {m.name}
-                    </h3>
-                    <p className="text-pink-600 mb-4">
-                      {m.role}
-                    </p>
-                    <p className="text-gray-600 text-sm">
-                      {m.bio}
-                    </p>
+                    <h3 className="font-semibold text-lg">{m.name}</h3>
+                    <p className="text-pink-600 mb-4">{m.role}</p>
+                    <p className="text-gray-600 text-sm">{m.bio}</p>
                   </CardContent>
                 </Card>
               ))}
             </div>
           </div>
         </section>
-        {}
+
         <section className="py-16 bg-pink-50">
           <div className="max-w-7xl mx-auto px-6 text-center">
             <h2 className="text-3xl font-serif font-bold mb-14">
@@ -228,18 +203,14 @@ export default function About() {
                   <div className="w-16 h-16 mx-auto bg-pink-600 text-white rounded-full flex items-center justify-center font-bold text-2xl mb-6">
                     {step.step}
                   </div>
-                  <h3 className="font-semibold mb-2">
-                    {step.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm">
-                    {step.description}
-                  </p>
+                  <h3 className="font-semibold mb-2">{step.title}</h3>
+                  <p className="text-gray-600 text-sm">{step.description}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
-        {}
+
         <section className="py-20 bg-gradient-to-r from-pink-600 to-red-500 text-white text-center">
           <Gift size={44} className="mx-auto mb-4" />
           <h2 className="text-3xl md:text-4xl font-bold mb-4">

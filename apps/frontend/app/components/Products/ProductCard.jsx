@@ -12,7 +12,7 @@ export default function ProductCard({ product, onClick }) {
         onClick={() => onClick(product)}
       >
         <img
-          src={product.images?.[0] || "https:
+          src={product.images?.[0]}
           alt={product.name}
           className="h-full w-full object-cover transition group-hover:scale-110"
         />

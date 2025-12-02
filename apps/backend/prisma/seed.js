@@ -1,6 +1,8 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+
 const now = new Date();
+
 const categories = [
   { name: "Electronics" },
   { name: "Clothing" },
@@ -13,11 +15,13 @@ const categories = [
   { name: "Accessories" },
   { name: "Health & Personal Care" },
 ];
+
 const images = (id) => [
-  `https:
-  `https:
-  `https:
+  `https://picsum.photos/seed/${id}-1/600/600`,
+  `https://picsum.photos/seed/${id}-2/600/600`,
+  `https://picsum.photos/seed/${id}-3/600/600`,
 ];
+
 const products = [
   { name: "Wireless Noise-Cancelling Headphones", description: "Over-ear ANC headphones with deep bass.", price: 199.99, stock: 50, categoryId: 1 },
   { name: "Smart Fitness Watch", description: "Heart-rate, GPS, and sleep tracking smartwatch.", price: 129.99, stock: 70, categoryId: 1 },
@@ -57,27 +61,33 @@ const products = [
   { name: "Vitamin D3 + K2", description: "Bone support capsules.", price: 14.99, stock: 140, categoryId: 10 },
   { name: "White Noise Machine", description: "Sleep relaxation device.", price: 34.99, stock: 45, categoryId: 10 },
 ];
+
 products.forEach((p, i) => {
   p.images = images(i + 1);
   p.isVisible = true;
   p.createdAt = now;
   p.updatedAt = now;
 });
+
 async function main() {
   console.log("Clearing old data...");
   await prisma.product.deleteMany({});
   await prisma.category.deleteMany({});
+
   console.log("Seeding categories...");
   await prisma.category.createMany({
     data: categories,
     skipDuplicates: true,
   });
+
   console.log("Seeding products...");
   await prisma.product.createMany({
     data: products,
   });
+
   console.log("✅ Database seeded successfully!");
 }
+
 main()
   .catch((e) => {
     console.error("❌ Seed failed:", e);
