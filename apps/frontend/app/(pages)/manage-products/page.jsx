@@ -6,10 +6,13 @@ import Footer from "@/app/components/Footer";
 import Navbar from "@/app/components/Navbar";
 
 export default function ManageProductsPage() {
+  /* ================= STATE ================= */
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
 
-  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("newest");
 
@@ -30,25 +33,51 @@ export default function ManageProductsPage() {
 
   /* ================= LOAD DATA ================= */
 
-  const loadProducts = async () => {
-    try {
-      const res = await adminProductAPI.list();
-      let list = res.data.products;
+  const fetchProducts = async (currentPage, shouldReset = false) => {
+    if (loading) return;
+    setLoading(true);
 
-      if (search) {
-        list = list.filter((p) =>
-          p.name.toLowerCase().includes(search.toLowerCase())
-        );
+    try {
+      let sortBy = "createdAt";
+      let order = "desc";
+
+      if (sort === "price-low") {
+        sortBy = "price";
+        order = "asc";
+      } else if (sort === "price-high") {
+        sortBy = "price";
+        order = "desc";
       }
 
-      if (sort === "price-low") list.sort((a, b) => a.price - b.price);
-      else if (sort === "price-high") list.sort((a, b) => b.price - a.price);
-      else list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      const res = await adminProductAPI.list({
+        page: currentPage,
+        limit: 30,
+        search,
+        sortBy,
+        order,
+      });
 
-      setProducts(list);
+      const newProducts = res.data.products;
+
+      if (shouldReset) {
+        setProducts(newProducts);
+      } else {
+        // Filter out duplicates to prevent "same key" errors
+        setProducts((prev) => {
+          const existingIds = new Set(prev.map((p) => String(p.id)));
+          const uniqueNew = newProducts.filter(
+            (p) => !existingIds.has(String(p.id))
+          );
+          return [...prev, ...uniqueNew];
+        });
+      }
+
+      setHasMore(newProducts.length === 30);
     } catch (err) {
       console.error(err);
       alert("Failed to load products");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,17 +87,46 @@ export default function ManageProductsPage() {
       setCategories(res.data.categories || []);
     } catch (err) {
       console.error(err);
-      alert("Failed to load categories");
     }
   };
 
+  // Initial Load & Search/Sort Change
   useEffect(() => {
-    (async () => {
-      setLoading(true);
-      await Promise.all([loadProducts(), loadCategories()]);
-      setLoading(false);
-    })();
+    setPage(1);
+    setHasMore(true);
+    fetchProducts(1, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, sort]);
+
+  // Load Categories Once
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  // Infinite Scroll Observer
+  useEffect(() => {
+    if (!hasMore || loading) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setPage((prev) => {
+            const nextPage = prev + 1;
+            fetchProducts(nextPage, false);
+            return nextPage;
+          });
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    const sentinel = document.getElementById("sentinel");
+    if (sentinel) observer.observe(sentinel);
+
+    return () => {
+      if (sentinel) observer.unobserve(sentinel);
+    };
+  }, [hasMore, loading]);
 
   /* ================= CRUD ================= */
 
@@ -239,6 +297,13 @@ export default function ManageProductsPage() {
                 </td>
               </tr>
             ))}
+            {/* SENTINEL FOR INFINITE SCROLL */}
+            <tr id="sentinel">
+              <td colSpan="7" className="p-4 text-center text-gray-500">
+                {loading && "Loading more products..."}
+                {!hasMore && products.length > 0 && "End of list"}
+              </td>
+            </tr>
           </tbody>
         </table>
 

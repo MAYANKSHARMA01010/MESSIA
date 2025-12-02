@@ -48,7 +48,15 @@ async function createProduct(req, res) {
 /* ================= READ ALL ================= */
 async function getAllProducts(req, res) {
   try {
-    const { page = 1, limit = 10, categoryId, showHidden } = req.query;
+    const {
+      page = 1,
+      limit = 10,
+      categoryId,
+      showHidden,
+      search,
+      sortBy = "createdAt",
+      order = "desc",
+    } = req.query;
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
@@ -58,9 +66,21 @@ async function getAllProducts(req, res) {
       where.categoryId = parseInt(categoryId);
     }
 
+    if (search) {
+      where.name = {
+        contains: search,
+        mode: "insensitive",
+      };
+    }
+
     // SECURITY FIX: Only Admins can see hidden products
     if (!(req.user?.role === "ADMIN" && showHidden === "true")) {
       where.isVisible = true;
+    }
+
+    const orderBy = {};
+    if (sortBy) {
+      orderBy[sortBy] = order === "asc" ? "asc" : "desc";
     }
 
     const [products, total] = await Promise.all([
@@ -69,9 +89,7 @@ async function getAllProducts(req, res) {
         skip,
         take: parseInt(limit),
         include: { category: true },
-        orderBy: {
-          createdAt: "desc",
-        },
+        orderBy,
       }),
       prisma.product.count({ where }),
     ]);

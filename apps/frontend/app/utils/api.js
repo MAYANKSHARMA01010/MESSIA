@@ -90,7 +90,7 @@ export const addressAPI = {
 };
 
 export const productAPI = {
-  list: () => api.get("/products"),
+  list: (params) => api.get("/products", { params }),
   getOne: (id) => api.get(`/products/${id}`),
 };
 

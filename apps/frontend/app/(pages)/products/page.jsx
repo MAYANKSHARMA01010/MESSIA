@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Loader2, Plus, Search } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "../../context/AuthContext";
-import { API_BASE_URL } from "../../utils/api";
+import { productAPI, categoryAPI } from "../../utils/api";
 
 import ProductCard from "../../components/Products/ProductCard";
 import ProductDetailsModal from "../../components/Products/ProductDetailsModal";
@@ -14,7 +13,11 @@ import Navbar from "@/app/components/Navbar";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+
   const { isAdmin } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,32 +27,116 @@ export default function ProductsPage() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const BASE_URL = API_BASE_URL;
+  /* ================= FETCH DATA ================= */
 
-  const categories = [
-    { id: 1, name: "Scented Candles" },
-    { id: 2, name: "Gift Sets" },
-    { id: 3, name: "Accessories" },
-  ];
+  const fetchProducts = async (currentPage, shouldReset = false) => {
+    if (loading) return;
+    setLoading(true);
 
-  useEffect(() => {
-    fetchProducts();
-  }, [isAdmin]);
-
-  const fetchProducts = async () => {
     try {
-      const url = isAdmin
-        ? `${BASE_URL}/products?showHidden=true`
-        : `${BASE_URL}/products`;
+      let sortField = "createdAt";
+      let order = "desc";
 
-      const response = await axios.get(url);
-      setProducts(response.data.products);
+      switch (sortBy) {
+        case "price_asc":
+          sortField = "price";
+          order = "asc";
+          break;
+        case "price_desc":
+          sortField = "price";
+          order = "desc";
+          break;
+        case "name_asc":
+          sortField = "name";
+          order = "asc";
+          break;
+        case "newest":
+        default:
+          sortField = "createdAt";
+          order = "desc";
+          break;
+      }
+
+      const params = {
+        page: currentPage,
+        limit: 12, // Load 12 at a time for grid layout
+        search: searchQuery,
+        sortBy: sortField,
+        order,
+        categoryId: selectedCategory !== "all" ? selectedCategory : undefined,
+        showHidden: isAdmin ? "true" : undefined,
+      };
+
+      const res = await productAPI.list(params);
+      const newProducts = res.data.products;
+
+      if (shouldReset) {
+        setProducts(newProducts);
+      } else {
+        setProducts((prev) => {
+          const existingIds = new Set(prev.map((p) => String(p.id)));
+          const uniqueNew = newProducts.filter(
+            (p) => !existingIds.has(String(p.id))
+          );
+          return [...prev, ...uniqueNew];
+        });
+      }
+
+      setHasMore(newProducts.length === 12);
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
       setLoading(false);
     }
   };
+
+  const fetchCategories = async () => {
+    try {
+      const res = await categoryAPI.list();
+      setCategories(res.data.categories || []);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  /* ================= EFFECTS ================= */
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    setPage(1);
+    setHasMore(true);
+    fetchProducts(1, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, sortBy, selectedCategory, isAdmin]);
+
+  useEffect(() => {
+    if (!hasMore || loading) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setPage((prev) => {
+            const nextPage = prev + 1;
+            fetchProducts(nextPage, false);
+            return nextPage;
+          });
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    const sentinel = document.getElementById("product-sentinel");
+    if (sentinel) observer.observe(sentinel);
+
+    return () => {
+      if (sentinel) observer.unobserve(sentinel);
+    };
+  }, [hasMore, loading]);
+
+  /* ================= HANDLERS ================= */
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
@@ -60,52 +147,6 @@ export default function ProductsPage() {
     setIsModalOpen(false);
     setTimeout(() => setSelectedProduct(null), 300);
   };
-
-  const filteredProducts = useMemo(() => {
-    let result = [...products];
-
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      result = result.filter(
-        (p) =>
-          p.name.toLowerCase().includes(query) ||
-          p.description?.toLowerCase().includes(query)
-      );
-    }
-
-    if (selectedCategory !== "all") {
-      result = result.filter((p) => p.categoryId === selectedCategory);
-    }
-
-    switch (sortBy) {
-      case "price_asc":
-        result.sort((a, b) => a.price - b.price);
-        break;
-      case "price_desc":
-        result.sort((a, b) => b.price - a.price);
-        break;
-      case "name_asc":
-        result.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case "newest":
-      default:
-        result.sort((a, b) => b.id - a.id);
-        break;
-    }
-
-    return result;
-  }, [products, searchQuery, selectedCategory, sortBy]);
-
-  if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-white dark:bg-gray-950">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-10 w-10 animate-spin text-pink-600" />
-          <p className="text-gray-500 animate-pulse">Curating collection...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -144,7 +185,7 @@ export default function ProductsPage() {
         />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {filteredProducts.length === 0 ? (
+          {products.length === 0 && !loading ? (
             <div className="text-center py-20">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4 dark:bg-gray-800">
                 <Search size={24} className="text-gray-400" />
@@ -168,7 +209,7 @@ export default function ProductsPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-              {filteredProducts.map((product) => (
+              {products.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={product}
@@ -177,6 +218,21 @@ export default function ProductsPage() {
               ))}
             </div>
           )}
+
+          {/* SENTINEL FOR INFINITE SCROLL */}
+          <div
+            id="product-sentinel"
+            className="h-20 flex justify-center items-center mt-8"
+          >
+            {loading && (
+              <Loader2 className="h-8 w-8 animate-spin text-pink-600" />
+            )}
+            {!hasMore && products.length > 0 && (
+              <p className="text-gray-500 dark:text-gray-400">
+                You've reached the end of the collection.
+              </p>
+            )}
+          </div>
         </div>
 
         <ProductDetailsModal
