@@ -133,7 +133,7 @@ export default function ManageProductsPage() {
         await adminProductAPI.create(payload);
       }
       setShowForm(false);
-      loadProducts();
+      fetchProducts(1, true);
     } catch (err) {
       console.error(err);
       alert("Save failed");
@@ -143,7 +143,7 @@ export default function ManageProductsPage() {
     if (!confirm("Delete this product permanently?")) return;
     try {
       await adminProductAPI.remove(id);
-      loadProducts();
+      fetchProducts(1, true);
     } catch (err) {
       console.error(err);
       alert("Delete failed");
@@ -154,7 +154,7 @@ export default function ManageProductsPage() {
       await adminProductAPI.update(p.id, {
         isVisible: !p.isVisible,
       });
-      loadProducts();
+      fetchProducts(1, true);
     } catch (err) {
       console.error(err);
       alert("Update failed");
