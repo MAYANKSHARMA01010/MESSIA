@@ -1,6 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "export",
+
+  basePath: "/MESSIA",
+  assetPrefix: "/MESSIA/",
+
   images: {
+    unoptimized: true,
     domains: [
       "picsum.photos",
       "placehold.co",
