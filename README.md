@@ -57,7 +57,7 @@ MESSIA is a full-stack e-commerce platform designed for gifting premium products
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/MAYANKSHARMA01010/MESSIA.git
+git clone [https://github.com/MAYANKSHARMA01010/MESSIA.git](https://github.com/KraftlyWebStudio/MESSIA)
 cd messia
 ```
 
