@@ -26,4 +26,5 @@ authRouter.post("/login", loginUserMiddleware, loginUserController);
 authRouter.post("/logout", logoutUserMiddleware, logoutUserController);
 authRouter.get("/me", authLimiter, authenticate, getMeController);
 authRouter.put("/update", authLimiter, authenticate, updateUserMiddleware, updateUserController);
+
 module.exports = authRouter;

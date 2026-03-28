@@ -1,4 +1,6 @@
 const express = require("express");
+const router = express.Router();
+const rateLimit = require("express-rate-limit");
 const {
   getAddresses,
   createAddress,
@@ -7,9 +9,6 @@ const {
   setDefaultAddress,
 } = require("../controllers/addressController.js");
 const { authenticate } = require("../utils/auth.js");
-const rateLimit = require("express-rate-limit");
-
-const router = express.Router();
 
 // Apply rate limiting to all address routes to mitigate DoS attacks
 const addressLimiter = rateLimit({
@@ -24,4 +23,5 @@ router.post("/", createAddress);
 router.put("/:id", updateAddress);
 router.delete("/:id", deleteAddress);
 router.patch("/:id/default", setDefaultAddress);
+
 module.exports = router;

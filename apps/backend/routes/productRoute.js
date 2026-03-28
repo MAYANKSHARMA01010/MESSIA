@@ -19,14 +19,7 @@ const productLimiter = rateLimit({
 
 productRouter.get("/", getAllProducts);
 productRouter.get("/:id", getProductById);
-productRouter.post(
-  "/",
-  productLimiter,
-  authenticate,
-  verifyAdmin,
-  validateProduct,
-  createProduct
-);
+productRouter.post("/", productLimiter, authenticate, verifyAdmin, validateProduct, createProduct);
 productRouter.put("/:id", productLimiter, authenticate, verifyAdmin, updateProduct);
 productRouter.delete("/:id", productLimiter, authenticate, verifyAdmin, deleteProduct);
 module.exports = productRouter;

@@ -1,4 +1,5 @@
 const express = require("express");
+const router = express.Router();
 const rateLimit = require("express-rate-limit");
 const {
     getAllCategories,
@@ -17,7 +18,6 @@ const categoryLimiter = rateLimit({
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 
-const router = express.Router();
 router.get("/", getAllCategories);
 router.post("/", categoryLimiter, authenticate, verifyAdmin, createCategory);
 router.put("/:id", categoryLimiter, authenticate, verifyAdmin, updateCategory);
