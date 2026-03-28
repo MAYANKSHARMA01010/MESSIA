@@ -17,8 +17,8 @@ const addressLimiter = rateLimit({
   max: 100, // limit each IP to 100 requests per windowMs for these routes
 });
 
-router.use(authenticate);
 router.use(addressLimiter);
+router.use(authenticate);
 router.get("/", getAddresses);
 router.post("/", createAddress);
 router.put("/:id", updateAddress);
